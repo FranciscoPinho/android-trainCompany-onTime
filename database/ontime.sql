@@ -83,6 +83,7 @@ CREATE TABLE IF NOT EXISTS `stationschedule` (
   `scheduleID` int(11) NOT NULL,
   `station` varchar(100) NOT NULL,
   `nextstation` varchar(100),
+  `distance` float,
   `DepartureTime` TIME,
   PRIMARY KEY (`id`),
   UNIQUE KEY `stationCombo` (`station`,`nextstation`)
@@ -115,6 +116,7 @@ CREATE TABLE IF NOT EXISTS `ticket` (
   `destination` varchar(100) NOT NULL,
   `departureTime` TIME NOT NULL,
   `arrivalTime` TIME NOT NULL,
+  `price` decimal(6,2) NOT NULL,
   PRIMARY KEY (`id`)
 );
 
