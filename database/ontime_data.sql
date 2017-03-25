@@ -70,12 +70,26 @@ INSERT INTO `stationschedule` (`id`, `scheduleID`, `station`, `nextstation`, `di
 
 --Train
 --Destination Santa Apolónia
-INSERT INTO `train` (`id`, `capacity`, `scheduleID`) VALUES (NULL, '50', '1');
-INSERT INTO `train` (`id`, `capacity`, `scheduleID`) VALUES (NULL, '30', '2');
-INSERT INTO `train` (`id`, `capacity`, `scheduleID`) VALUES (NULL, '30', '3');
-INSERT INTO `train` (`id`, `capacity`, `scheduleID`) VALUES (NULL, '5', '4');
+INSERT INTO `train` (`id`,'designation', `capacity`, `scheduleID`) VALUES (NULL,'L1', '50', '1');
+INSERT INTO `train` (`id`,'designation', `capacity`, `scheduleID`) VALUES (NULL,'L2', '30', '2');
+INSERT INTO `train` (`id`,'designation', `capacity`, `scheduleID`) VALUES (NULL,'L3', '30', '3');
+INSERT INTO `train` (`id`,'designation', `capacity`, `scheduleID`) VALUES (NULL,'L4', '5', '4');
 --Destination São Bento
-INSERT INTO `train` (`id`, `capacity`, `scheduleID`) VALUES (NULL, '50', '5');
-INSERT INTO `train` (`id`, `capacity`, `scheduleID`) VALUES (NULL, '40', '6');
-INSERT INTO `train` (`id`, `capacity`, `scheduleID`) VALUES (NULL, '35', '7');
-INSERT INTO `train` (`id`, `capacity`, `scheduleID`) VALUES (NULL, '10', '8');
+INSERT INTO `train` (`id`,'designation', `capacity`, `scheduleID`) VALUES (NULL,'P1', '50', '5');
+INSERT INTO `train` (`id`,'designation', `capacity`, `scheduleID`) VALUES (NULL,'P2', '40', '6');
+INSERT INTO `train` (`id`,'designation', `capacity`, `scheduleID`) VALUES (NULL,'P3', '35', '7');
+INSERT INTO `train` (`id`,'designation', `capacity`, `scheduleID`) VALUES (NULL,'P4', '10', '8');
+
+
+
+--Keys
+
+--
+-- Dumping data for table `encryption_keys`
+--
+
+INSERT INTO `encryption_keys` (`private`, `public`) VALUES
+('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');
+
+
+

@@ -15,7 +15,7 @@ USE `ontime`;
 
  
 CREATE TABLE IF NOT EXISTS `users` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
   `name` varchar(100) DEFAULT NULL,
   `email` varchar(150) NOT NULL,
   `password_hash` text NOT NULL,
@@ -108,7 +108,8 @@ ON DELETE CASCADE ON UPDATE CASCADE ;
 
 CREATE TABLE IF NOT EXISTS `ticket` (
   `id` varchar(36) NOT NULL,
-  `trainID` int(11) NOT NULL,
+  'userID' int(11) NOT NULL,
+  `trainDesignation` varchar(10) NOT NULL,
   `validation` BOOLEAN NOT NULL,
   `origin` varchar(100) NOT NULL,
   `destination` varchar(100) NOT NULL,
@@ -118,8 +119,7 @@ CREATE TABLE IF NOT EXISTS `ticket` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
-
-ALTER TABLE  `ticket` ADD CONSTRAINT stationschedule_train_fk FOREIGN KEY (  `trainID` ) REFERENCES  `ontime`.`train` (
+ALTER TABLE  `ticket` ADD CONSTRAINT stationschedule_userID_fk FOREIGN KEY (  `userID` ) REFERENCES  `ontime`.`users` (
 `id`
 ) ON DELETE CASCADE ON UPDATE CASCADE ;
 
@@ -139,9 +139,11 @@ ALTER TABLE  `ticket` ADD CONSTRAINT stationschedule_destination_fk FOREIGN KEY 
 
 CREATE TABLE IF NOT EXISTS `train` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `designation` varchar(10) NOT NULL,
   `capacity` smallint NOT NULL,
   `scheduleID` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `designation` (`designation`)
 ) ENGINE=InnoDB;
 
 
@@ -150,4 +152,14 @@ ALTER TABLE  `train` ADD CONSTRAINT train_schedule_fk FOREIGN KEY (  `scheduleID
 ) ON DELETE CASCADE ON UPDATE CASCADE ;
 
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `encryption_keys`
+--
+
+CREATE TABLE `encryption_keys` (
+  `private` text NOT NULL,
+  `public` text NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
