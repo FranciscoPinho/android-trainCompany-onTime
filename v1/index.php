@@ -140,5 +140,15 @@ $app->post('/ticket', function() use ($app) {
 
          
         });
-        
+
+ /**
+ * Ticket purchase/generation
+ * url - /schedules
+ * method - GET
+ */
+$app->get('/schedules', function() use ($app) {         
+            $db = new DbOperations();
+            echoRespnse(200, $db->getSchedules());
+
+        });
         $app->run();

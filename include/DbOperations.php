@@ -126,9 +126,15 @@ class DbOperations {
     /* ------------- `ticket` table method ------------------ */
 
     /**
-     * Creating new ticket
-     * @param String $user_id user id to whom task belongs to
-     * @param String $task task text
+     * Creating new ticket and generates RSA signature of hashed ticket data
+     * @param Int $user_id ticket buyer
+     * @param String $trainDesignation train identifier
+     * @param boolean $validated generated tickets start with false
+     * @param String $origin beginning station
+     * @param String $destination end station
+     * @param String $departureTime departure from origin station at this time
+     * @param String $arrivalTime arrival to destination at this time
+     * @param Double $price price paid for the ticket
      */
     public function generateTicket($userID, $trainDesignation, $validation, $origin, $destination, $departureTime, $arrivalTime, $price) {
         $uuid4 = Uuid::uuid4();
@@ -181,31 +187,34 @@ EOF;
     }
 
     /**
-     * Fetching all user tasks
+     * Fetching the schedules of the service
      * @param String $user_id id of the user
      */
-    public function getAllTickets($user_id) {
-        $stmt = $this->conn->prepare("SELECT t.* FROM tasks t, user_tasks ut WHERE t.id = ut.task_id AND ut.user_id = ?");
-        $stmt->bind_param("i", $user_id);
-        $stmt->execute();
-        $tasks = $stmt->get_result();
-        $stmt->close();
-        return $tasks;
+    public function getSchedules() {
+        $sql="SELECT stationschedule.id,train.designation AS train,
+             (SELECT name FROM station WHERE stationschedule.station=station.id) AS origin,
+             (SELECT name FROM station WHERE stationschedule.nextstation=station.id) AS destination,
+              distance,departureTime,arrivalTime 
+             FROM stationschedule 
+             INNER JOIN station on stationschedule.station=station.id 
+             INNER JOIN train on train.scheduleID=stationschedule.scheduleID 
+             GROUP BY stationschedule.id,train.designation;";
+        $result = $this->conn->query($sql);
+        $schedules=array();
+            if ($result->num_rows > 0) {
+                 while($row = $result->fetch_assoc()) {
+                        $schedules[]=$row;     
+                    }
+                    return $schedules;
+            }
+            else {
+                $response["error"] = true;
+                $response["message"] = "Couldn't retrieve schedules! Database may be down";
+                return $response;
+            }
+      
     }
 
-    /**
-     * Updating task
-     * @param String $task_id id of the task
-     * @param String $task task text
-     * @param String $status task status
-     */
-    public function updateTask($user_id, $task_id, $task, $status) {
-        $stmt = $this->conn->prepare("UPDATE tasks t, user_tasks ut set t.task = ?, t.status = ? WHERE t.id = ? AND t.id = ut.task_id AND ut.user_id = ?");
-        $stmt->bind_param("siii", $task, $status, $task_id, $user_id);
-        $stmt->execute();
-        $num_affected_rows = $stmt->affected_rows;
-        $stmt->close();
-        return $num_affected_rows > 0;
-    }
+
 
 }
