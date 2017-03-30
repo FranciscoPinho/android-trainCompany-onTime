@@ -1,22 +1,27 @@
 <?php
- 
+
+require '../vendor/autoload.php';
+
+use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
+
 /**
  * Class to handle all db operations
  * This class will have CRUD methods for database tables
  */
 class DbOperations {
- 
+
     private $conn;
- 
+
     function __construct() {
         require_once dirname(__FILE__) . './DbConnect.php';
         // opening db connection
         $db = new DbConnect();
         $this->conn = $db->connect();
     }
- 
+
     /* ------------- `users` table method ------------------ */
- 
+
     /**
      * Creating new user
      * @param String $name User full name
@@ -25,20 +30,20 @@ class DbOperations {
      */
     public function createUser($name, $email, $password) {
         require_once 'PassHash.php';
-      
+
         // First check if user already existed in db
         if (!$this->isUserExists($email)) {
-           
+
             // Generating password hash
             $password_hash = PassHash::hash($password);
             // insert query
             $stmt = $this->conn->prepare("INSERT INTO users(name, email, password_hash) values(?, ?, ?)");
             $stmt->bind_param("sss", $name, $email, $password_hash);
- 
+
             $result = $stmt->execute();
- 
+
             $stmt->close();
- 
+
             // Check for successful insertion
             if ($result) {
                 // User successfully inserted
@@ -51,9 +56,8 @@ class DbOperations {
             // User with same email already existed in the db
             return 1;
         }
- 
     }
- 
+
     /**
      * Checking user login
      * @param String $email User login email id
@@ -63,20 +67,20 @@ class DbOperations {
     public function checkLogin($email, $password) {
         // fetching user by email
         $stmt = $this->conn->prepare("SELECT password_hash FROM users WHERE email = ?");
- 
+
         $stmt->bind_param("s", $email);
- 
+
         $stmt->execute();
- 
+
         $stmt->bind_result($password_hash);
- 
+
         $stmt->store_result();
- 
+
         if ($stmt->num_rows > 0) {
-  
+
             $stmt->fetch();
             $stmt->close();
- 
+
             if (PassHash::check_password($password_hash, $password)) {
                 return TRUE;
             } else {
@@ -87,7 +91,7 @@ class DbOperations {
             return -1;
         }
     }
- 
+
     /**
      * Checking for duplicate user by email address
      * @param String $email email to check in db
@@ -102,7 +106,7 @@ class DbOperations {
         $stmt->close();
         return $num_rows > 0;
     }
- 
+
     /**
      * Fetching user by email
      * @param String $email User email id
@@ -118,30 +122,64 @@ class DbOperations {
             return NULL;
         }
     }
- 
+
     /* ------------- `ticket` table method ------------------ */
- 
+
     /**
      * Creating new ticket
      * @param String $user_id user id to whom task belongs to
      * @param String $task task text
      */
-    public function generateTicket($userID, $trainDesignation,$validation,$origin,$destination,$departureTime,$arrivalTime,$price) {        
-        $stmt = $this->conn->prepare("INSERT INTO ticket(id,userID,trainDesignation,validation,origin,destination,departureTime,arrivalTime,price) VALUES(UUID(),?,?,?,?,?,?,?,?)");
-        $stmt->bind_param("isissssd", $userID, $trainDesignation,$validation,$origin,$destination,$departureTime,$arrivalTime,$price);
+    public function generateTicket($userID, $trainDesignation, $validation, $origin, $destination, $departureTime, $arrivalTime, $price) {
+        $uuid4 = Uuid::uuid4();
+        $stmt = $this->conn->prepare("INSERT INTO ticket(id,userID,trainDesignation,validation,origin,destination,departureTime,arrivalTime,price) VALUES(?,?,?,?,?,?,?,?,?)");
+        $stmt->bind_param("sisissssd", $uuid4, $userID, $trainDesignation, $validation, $origin, $destination, $departureTime, $arrivalTime, $price);
         $result = $stmt->execute();
+
         $stmt->close();
- 
+        $signature = sha1(json_encode(array($uuid4, $userID, $trainDesignation, $validation, $origin, $destination, $departureTime, $arrivalTime, $price)));
+        $encrypted_signature = null;
         if ($result) {
-            
+            $sql = "SELECT private FROM `encryption_keys`;";
+            $result = $this->conn->query($sql);
+            if ($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                $key=$row['private'];
+                $key = wordwrap($key, 65, "\n", true);
+                $key = <<<EOF
+-----BEGIN RSA PRIVATE KEY-----
+$key
+-----END RSA PRIVATE KEY-----
+EOF;
+                
+                openssl_private_encrypt($signature, $encrypted_signature, openssl_pkey_get_private($key, "phrase"));
+              
+            } else {
+                $response["error"] = true;
+                $response["message"] = "Oops! An error occurred while purchasing ticket! Database may be down";
+                return $response;
+            }
+            $signature=bin2hex($encrypted_signature);
+            $response = array(
+                'id' => $uuid4,
+                'userID' => $userID,
+                'trainDesignation' => $trainDesignation,
+                'validation' => $validation,
+                'origin' => $origin,
+                'destination' => $destination,
+                'departureTime' => $departureTime,
+                'arrivalTime' => $arrivalTime,
+                'price' => $price,
+                'signature' => $signature
+            );
+            return $response;
         } else {
-            // task failed to create
-            return NULL;
+            $response["error"] = true;
+            $response["message"] = "Oops! An error occurred while purchasing ticket";
+            return $response;
         }
     }
- 
-   
- 
+
     /**
      * Fetching all user tasks
      * @param String $user_id id of the user
@@ -154,7 +192,7 @@ class DbOperations {
         $stmt->close();
         return $tasks;
     }
- 
+
     /**
      * Updating task
      * @param String $task_id id of the task
@@ -169,11 +207,5 @@ class DbOperations {
         $stmt->close();
         return $num_affected_rows > 0;
     }
- 
-    
- 
 
 }
- 
-
-

@@ -1,21 +1,21 @@
 --Stations
-INSERT INTO `station` (`id`, `name`) VALUES (NULL, 'São Bento');
+INSERT INTO `station` (`id`, `name`) VALUES (NULL, 'Sao Bento');
 INSERT INTO `station` (`id`, `name`) VALUES (NULL, 'Gaia');
 INSERT INTO `station` (`id`, `name`) VALUES (NULL, 'Aveiro');
 INSERT INTO `station` (`id`, `name`) VALUES (NULL, 'Coimbra');
 INSERT INTO `station` (`id`, `name`) VALUES (NULL, 'Oriente');
-INSERT INTO `station` (`id`, `name`) VALUES (NULL, 'Santa Apolónia');
+INSERT INTO `station` (`id`, `name`) VALUES (NULL, 'Santa Apolonia');
 
 --Schedules
 --Ordered by departure Times
-INSERT INTO `schedule` (`id`,`direction`) VALUES (NULL, 'Santa Apolónia'); --06:25  06:35	7:21  07:46   9:16    9:25
-INSERT INTO `schedule` (`id`,`direction`) VALUES (NULL, 'Santa Apolónia'); --08:25  08:35	9:21  09:46   11:16   11:25
-INSERT INTO `schedule` (`id`,`direction`) VALUES (NULL, 'Santa Apolónia'); --10:25  10:35   11:21 11:46   13:16   13:25
-INSERT INTO `schedule` (`id`,`direction`) VALUES (NULL, 'Santa Apolónia'); --12:25  12:35   13:21 13:46   15:16   15:25
-INSERT INTO `schedule` (`id`,`direction`) VALUES (NULL, 'São Bento'); -- 7:00  7:09	 8:45  9:20  9:50   10
-INSERT INTO `schedule` (`id`,`direction`) VALUES (NULL, 'São Bento'); -- 9:00  9:09	 10:45 11:20 11:50  12
-INSERT INTO `schedule` (`id`,`direction`) VALUES (NULL, 'São Bento'); -- 11:00 11:09 12:45 13:20 13:50  14
-INSERT INTO `schedule` (`id`,`direction`) VALUES (NULL, 'São Bento'); -- 13:00 13:09 14:45 15:20 15:50  16
+INSERT INTO `schedule` (`id`,`direction`) VALUES (NULL, 'Santa Apolonia'); --06:25  06:35	7:21  07:46   9:16    9:25
+INSERT INTO `schedule` (`id`,`direction`) VALUES (NULL, 'Santa Apolonia'); --08:25  08:35	9:21  09:46   11:16   11:25
+INSERT INTO `schedule` (`id`,`direction`) VALUES (NULL, 'Santa Apolonia'); --10:25  10:35   11:21 11:46   13:16   13:25
+INSERT INTO `schedule` (`id`,`direction`) VALUES (NULL, 'Santa Apolonia'); --12:25  12:35   13:21 13:46   15:16   15:25
+INSERT INTO `schedule` (`id`,`direction`) VALUES (NULL, 'Sao Bento'); -- 7:00  7:09	 8:45  9:20  9:50   10
+INSERT INTO `schedule` (`id`,`direction`) VALUES (NULL, 'Sao Bento'); -- 9:00  9:09	 10:45 11:20 11:50  12
+INSERT INTO `schedule` (`id`,`direction`) VALUES (NULL, 'Sao Bento'); -- 11:00 11:09 12:45 13:20 13:50  14
+INSERT INTO `schedule` (`id`,`direction`) VALUES (NULL, 'Sao Bento'); -- 13:00 13:09 14:45 15:20 15:50  16
 
 --StationSchedule
 --Sao Bento -> Santa Apolónia

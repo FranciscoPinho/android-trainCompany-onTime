@@ -123,7 +123,7 @@ ALTER TABLE  `ticket` ADD CONSTRAINT stationschedule_userID_fk FOREIGN KEY (  `u
 `id`
 ) ON DELETE CASCADE ON UPDATE CASCADE ;
 
-ALTER TABLE  `ticket` ADD CONSTRAINT stationschedule_origin_fk FOREIGN KEY (  `origin` ) REFERENCES  `ontime`.`station` (
+ALTER TABLE  `ticket` ADD CONSTRAINT stationschedule_origin_fk FOREIGN KEY (`origin`) REFERENCES  `ontime`.`station` (
 `name`
 ) ON DELETE CASCADE ON UPDATE CASCADE ;
 

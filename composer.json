@@ -1,0 +1,13 @@
+{
+    "name": "vendor/on-time-server",
+    "description": "Description of project onTimeServer.",
+    "authors": [
+        {
+            "name": "Francisco Pinho",
+            "email": "fpinhodig@gmail.com"
+        }
+    ],
+    "require": {
+        "ramsey/uuid": "dev-master"
+    }
+}

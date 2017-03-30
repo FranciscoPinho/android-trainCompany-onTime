@@ -6,10 +6,8 @@ require '.././libs/Slim/Slim.php';
 \Slim\Slim::registerAutoloader();
  
 $app = new \Slim\Slim();
-$app->get('/hello/:name', function ($name) {
-    echo "Hello, " . $name;
-});
- 
+
+     
 // User id from db - Global Variable
 $user_id = NULL;
  
@@ -112,6 +110,35 @@ $app->post('/register', function() use ($app) {
                 $response["message"] = "Sorry, this email already existed";
                 echoRespnse(200, $response);
             }
+        });
+    
+        
+/**
+ * Ticket purchase/generation
+ * url - /ticket
+ * method - POST
+ * params - userID,trainDesignation,validation,origin,destination,departuretime,arrivaltime,price
+ */
+$app->post('/ticket', function() use ($app) {
+            // check for required params
+            verifyRequiredParams(array('userID', 'trainDesignation', 'validation', 'origin', 'destination', 'departureTime', 'arrivalTime', 'price'));
+ 
+            $response = array();
+ 
+            // reading post params
+            $userID = $app->request->post('userID');
+            $trainDesignation  = $app->request->post('trainDesignation');
+            $validation = $app->request->post('validation');
+            $origin = $app->request->post('origin');
+            $destination = $app->request->post('destination');
+            $departureTime = $app->request->post('departureTime');
+            $arrivalTime = $app->request->post('arrivalTime');
+            $price = $app->request->post('price');
+          
+            $db = new DbOperations();
+            echoRespnse(200, $db->generateTicket($userID, $trainDesignation, $validation, $origin, $destination, $departureTime, $arrivalTime, $price));
+
+         
         });
         
         $app->run();
