@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1"
+    tools:context="com.example.holykael.ontime_travellers.MainActivity">
+    <include layout="@layout/actionbar_layout" />
+    <ImageView
+        android:id="@+id/banner"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="top"
+        android:layout_marginBottom="30dp"
+        android:layout_weight="0.70"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/trainbanner" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="223dp"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:text="@string/username_lbl" />
+
+    <EditText
+        android:id="@+id/editText2"
+        android:layout_width="228dp"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="228dp"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:text="@string/password_lbl" />
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="228dp"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPassword" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@color/colorPrimary"
+        android:text="@string/login_btn"
+        android:textColor="@color/fontButton" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center"
+        android:background="#ffffff"
+        android:text="@string/register_btn" />
+</LinearLayout>
