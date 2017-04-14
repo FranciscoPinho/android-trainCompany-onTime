@@ -151,4 +151,36 @@ $app->get('/schedules', function() use ($app) {
             echoRespnse(200, $db->getSchedules());
 
         });
+ /**
+ * Login
+ * url - /login
+ * method - POST
+ */
+$app->post('/login', function() use ($app) {   
+           verifyRequiredParams(array('email', 'password'));
+            // reading post params
+            $email = $app->request->post('email');
+            $password  = $app->request->post('password');
+            $db = new DbOperations();
+            $res=$db->checkLogin($email, $password);
+            switch($res){
+             case 0:
+                $response["email"] = $email;
+                $response["password"] = $password;
+                $response["error"] = false;
+                $response["message"] = "Login successful";
+                echoRespnse(200, $response);
+                break;
+            case 1:
+                $response["error"] = true;
+                $response["message"] = "email/password combination not found";
+                echoRespnse(201, $response);
+                break;
+            case -1:
+                $response["error"] = true;
+                $response["message"] = "User not found";
+                echoRespnse(202, $response);
+                break;
+            }
+        });
         $app->run();

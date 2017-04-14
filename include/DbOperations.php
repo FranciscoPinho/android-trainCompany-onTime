@@ -82,9 +82,9 @@ class DbOperations {
             $stmt->close();
 
             if (PassHash::check_password($password_hash, $password)) {
-                return TRUE;
+                return 0;
             } else {
-                return FALSE;
+                return 1;
             }
         } else {
             $stmt->close();

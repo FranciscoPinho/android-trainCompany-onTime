@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="1"
-    tools:context="com.example.holykael.ontime_travellers.MainActivity">
+    tools:context="com.example.holykael.ontime_travellers.loginActivity">
     <include layout="@layout/actionbar_layout" />
     <ImageView
         android:id="@+id/banner"
@@ -23,15 +23,15 @@
         android:layout_width="223dp"
         android:layout_gravity="center"
         android:layout_height="wrap_content"
-        android:text="@string/username_lbl" />
+        android:text="@string/email_lbl" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/email"
         android:layout_width="228dp"
         android:layout_gravity="center"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="text" />
+        android:inputType="textEmailAddress" />
 
     <TextView
         android:id="@+id/textView2"
@@ -41,7 +41,7 @@
         android:text="@string/password_lbl" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/password"
         android:layout_width="228dp"
         android:layout_gravity="center"
         android:layout_height="wrap_content"
@@ -54,6 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@color/colorPrimary"
+        android:onClick="loginRequest"
         android:text="@string/login_btn"
         android:textColor="@color/fontButton" />
 

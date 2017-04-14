@@ -4,8 +4,8 @@
     android:id="@+id/actionBar"
     android:layout_width="match_parent"
     android:layout_height="60dp"
-    app:contentInsetEnd="0dp"
-    app:contentInsetStart="0dp"
+    app:contentInsetEnd="20dp"
+    app:contentInsetStart="20dp"
     android:background="@color/colorPrimary"
     >
 
@@ -13,8 +13,7 @@
         android:id="@+id/imageIcon"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-
-        android:src="@drawable/travellers" />
+        android:src="@drawable/travellers_actionbar" />
 
     <TextView
         android:id="@+id/textView1"
