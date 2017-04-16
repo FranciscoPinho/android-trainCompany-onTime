@@ -165,8 +165,6 @@ $app->post('/login', function() use ($app) {
             $res=$db->checkLogin($email, $password);
             switch($res){
              case 0:
-                $response["email"] = $email;
-                $response["password"] = $password;
                 $response["error"] = false;
                 $response["message"] = "Login successful";
                 echoRespnse(200, $response);
