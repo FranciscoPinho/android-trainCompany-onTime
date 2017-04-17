@@ -17,11 +17,34 @@ USE `ontime`;
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT, 
   `name` varchar(100) DEFAULT NULL,
-  `email` varchar(150) NOT NULL,
+  `email` varchar(255) NOT NULL,
   `password_hash` text NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `email` (`email`)
+  UNIQUE( `email`)
 ) ENGINE=InnoDB;
+
+
+- --------------------------------------------------------
+
+--
+-- Table structure for table `user_sessions`
+--
+
+CREATE TABLE `user_sessions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `device_uuid` int(11) NOT NULL,
+  `is_logged_in` int(11) NOT NULL,
+  `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY(`id`),
+  UNIQUE(`device_uuid`,`user_id`)
+) ENGINE=InnoDB;
+
+-- Constraints for table `user_sessions`
+--
+ALTER TABLE `user_sessions`
+  ADD CONSTRAINT `sessions_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
 
 -- --------------------------------------------------------
 
@@ -31,15 +54,15 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 CREATE TABLE IF NOT EXISTS `creditcard` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` text NOT NULL,
-  `userID` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `user_email` varchar(255) NOT NULL,
   `number` varchar(20) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
 
-ALTER TABLE  `creditcard` ADD CONSTRAINT creditcard_fk FOREIGN KEY (  `userID` ) REFERENCES  `ontime`.`users` (
-`id`
+ALTER TABLE  `creditcard` ADD CONSTRAINT creditcard_fk FOREIGN KEY (  `user_email` ) REFERENCES  `ontime`.`users` (
+`email`
 ) ON DELETE CASCADE ON UPDATE CASCADE ;
 
 

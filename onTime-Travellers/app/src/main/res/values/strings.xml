@@ -6,6 +6,7 @@
     <string name="email_lbl">Email</string>
     <string name="password_lbl">Password</string>
     <string name="error_400">Invalid input: Email/Password cannot be empty</string>
+    <string name="error_400_register">Bad Request</string>
     <string name="time_out">Connection Timeout</string>
     <string name="register">Register</string>
     <string name="mandatory">All fields are mandatory</string>
@@ -14,4 +15,9 @@
     <string name="nr_lbl">Number</string>
     <string name="card_name">Name</string>
     <string name="account">Create new account</string>
+    <string name="confirm_password">Confirm</string>
+    <string name="password_err">Password fields do not match</string>
+    <string name="email_repeat_err">Email already registered in another account</string>
+    <string name="creditnr_err">Invalid credit card number</string>
+    <string name="email_err">Invalid email</string>
 </resources>

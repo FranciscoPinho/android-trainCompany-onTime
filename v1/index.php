@@ -82,7 +82,7 @@ function echoRespnse($status_code, $response) {
  */
 $app->post('/register', function() use ($app) {
             // check for required params
-            verifyRequiredParams(array('name', 'email', 'password'));
+            verifyRequiredParams(array('name', 'email', 'password','creditname','creditnumber','uuid'));
  
             $response = array();
  
@@ -90,6 +90,9 @@ $app->post('/register', function() use ($app) {
             $name = $app->request->post('name');
             $email = $app->request->post('email');
             $password = $app->request->post('password');
+            $creditname = $app->request->post('creditname');
+            $creditnumber = $app->request->post('creditnumber');
+            $uuid = $app->request->post('uuid');
  
             // validating email address
             validateEmail($email);
@@ -98,15 +101,19 @@ $app->post('/register', function() use ($app) {
             $res = $db->createUser($name, $email, $password);
  
             if ($res == 0) {
-                $response["error"] = false;
+                $response["error"] = 0;
                 $response["message"] = "You are successfully registered";
+                $res3=$db->createUpdateSession($email, $uuid,1);
+                $res2=$db->addCreditCard($creditname, $email, $creditnumber);
+                $response["creditcard"]=$res2;
+                $response["session"]=$res3;
                 echoRespnse(201, $response);
             } else if ($res == -1) {
-                $response["error"] = true;
-                $response["message"] = "Oops! An error occurred while registereing";
+                $response["error"] = -1;
+                $response["message"] = "Database connection failed";
                 echoRespnse(200, $response);
             } else if ($res == 1) {
-                $response["error"] = true;
+                $response["error"] = 1;
                 $response["message"] = "Sorry, this email already existed";
                 echoRespnse(200, $response);
             }
@@ -157,21 +164,55 @@ $app->get('/schedules', function() use ($app) {
  * method - POST
  */
 $app->post('/login', function() use ($app) {   
-           verifyRequiredParams(array('email', 'password'));
+           verifyRequiredParams(array('email', 'password','uuid'));
             // reading post params
             $email = $app->request->post('email');
             $password  = $app->request->post('password');
+            $uuid  = $app->request->post('uuid');
             $db = new DbOperations();
             $res=$db->checkLogin($email, $password);
             switch($res){
              case 0:
                 $response["error"] = false;
                 $response["message"] = "Login successful";
+                $db->createUpdateSession($email, $uuid,1);
                 echoRespnse(200, $response);
                 break;
             case 1:
                 $response["error"] = true;
                 $response["message"] = "email/password combination not found";
+                echoRespnse(201, $response);
+                break;
+            case -1:
+                $response["error"] = true;
+                $response["message"] = "User not found";
+                echoRespnse(202, $response);
+                break;
+            }
+        });
+        
+         /**
+ * autoLogin
+ * url - /autologin
+ * method - POST
+ */
+$app->post('/autologin', function() use ($app) {   
+           verifyRequiredParams(array('email', 'uuid'));
+            // reading post params
+            $email = $app->request->post('email');
+            $uuid  = $app->request->post('uuid');
+            $db = new DbOperations();
+            $res=$db->autoLogin($email, $uuid);
+            switch($res){
+             case 0:
+                $response["error"] = false;
+                $response["message"] = "Login successful";
+                $response["session"]=$db->createUpdateSession($email, $uuid,1);
+                echoRespnse(200, $response);
+                break;
+            case 1:
+                $response["error"] = true;
+                $response["message"] = "No current session";
                 echoRespnse(201, $response);
                 break;
             case -1:

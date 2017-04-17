@@ -2,6 +2,7 @@ package com.example.holykael.ontime_travellers;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -20,48 +21,60 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
+
 
 public class loginActivity extends AppCompatActivity {
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Toolbar actionBar = (Toolbar) findViewById(R.id.actionBar);
         setSupportActionBar(actionBar);
+        installationUuidSharedPreferences();
         loadSharedPreferences();
         setContentView(R.layout.activity_main);
     }
 
-    public void saveSharedPreferences(String email, String password){
-        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+
+    public void installationUuidSharedPreferences(){
+        // This will get you an instance of your applications shared preferences.
+        SharedPreferences preferences = this.getSharedPreferences("Data",Context.MODE_PRIVATE);
+        String uuid = preferences.getString("loginUUID",null);
+        SharedPreferences.Editor editor = preferences.edit();
+        if(uuid==null) {
+            String uniqueID = UUID.randomUUID().toString();
+            editor.putString("loginUUID",uniqueID);
+            editor.apply();
+        }
+    }
+    public void saveSharedPreferences(String email){
+        SharedPreferences sharedPref = this.getSharedPreferences("Data",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("loginEmail",email);
-        editor.putString("loginPassword",password);
         editor.apply();
 
     }
 
     public void loadSharedPreferences(){
         // This will get you an instance of your applications shared preferences.
-        SharedPreferences preferences = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences preferences = this.getSharedPreferences("Data",Context.MODE_PRIVATE);
 
         // Values
         String email = preferences.getString("loginEmail",null);
-        String password = preferences.getString("loginPassword",null);
+        String uuid = preferences.getString("loginUUID",null);
 
         // Then you want to query preferences for values such as username and password like
-        if((email != null) && (password != null))
+        if((uuid!=null) && (email != null))
         {
-
-            Log.d("Preferences email",email);
-            Log.d("Preferences pass",password);
-
-            if(loginRequest(email,password)){
-                Log.d("Preferences","auto logged in");
-                //intent to logged in activity
-            }
-
+            Log.d("UUID",uuid);
+            Log.d("email",email);
+            autoLoginRequest(email,uuid,new VolleyCallback(){
+                @Override
+                public void onSuccess(){
+                    Log.d("LOGIN","AUTO LOGIN SUCCESS");
+                    //intent for logged in
+                }
+            });
         }
     }
 
@@ -71,19 +84,26 @@ public class loginActivity extends AppCompatActivity {
 
         final String email = emailView.getText().toString();
         final String pass = passView.getText().toString();
-        if(loginRequest(email,pass)) {
-            saveSharedPreferences(email, pass);
-            //intent to logged in activity
-        }
+        SharedPreferences preferences = this.getSharedPreferences("Data",Context.MODE_PRIVATE);
+        String uuid = preferences.getString("loginUUID",null);
+        loginRequest(email,pass,uuid,new VolleyCallback(){
+            @Override
+            public void onSuccess(){
+                saveSharedPreferences(email);
+                //intent for logged in
+            }
+        });
+
     }
 
-    public boolean loginRequest(String e,String p) {
+    public void loginRequest(String e,String p,String u,final VolleyCallback callback) {
         final String email=e;
         final String pass=p;
-        final ValContainer<Boolean> loginResult = new ValContainer<Boolean>(false);
+        final String uuid=u;
+
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url ="http://192.168.1.6:80/onTimeServer/v1/login";
+        String url ="http://192.168.1.99:80/onTimeServer/v1/login";
 
         // Request a string response from the provided URL.
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST,url,null,new Response.Listener<JSONObject>() {
@@ -92,7 +112,7 @@ public class loginActivity extends AppCompatActivity {
                 Log.d("LOGIN",Response.toString());
                 try {
                     if (!Response.getBoolean("error")){
-                        loginResult.setVal(true);
+                        callback.onSuccess();
                     }
 
                     else
@@ -100,12 +120,10 @@ public class loginActivity extends AppCompatActivity {
                         TextView errorview =(TextView) findViewById(R.id.error);
                         errorview.setText(Response.getString("message"));
                         errorview.setVisibility(View.VISIBLE);
-                        loginResult.setVal(false);
                     }
                 }
                 catch(JSONException e){
                     Log.d("JSONException","Try Login Again");
-                    loginResult.setVal(false);
                 }
             }
         }, new Response.ErrorListener() {
@@ -125,12 +143,12 @@ public class loginActivity extends AppCompatActivity {
             }
         }) {
             @Override
-            public byte[] getBody()
-            {
+            public byte[] getBody(){
                 try
                 {
-                    final String body = "&email=" + email +  // assumes username is final and is url encoded.
-                            "&password=" + pass;            // assumes password is final and is url encoded.
+                    final String body = "&email=" + email +
+                            "&password=" + pass +
+                            "&uuid=" + uuid;
                     return body.getBytes("utf-8");
                 }
                 catch (Exception ex) { }
@@ -156,8 +174,84 @@ public class loginActivity extends AppCompatActivity {
         };
         // Add the request to the RequestQueue.
         queue.add(jsonRequest);
-        //Save login data on sharedPreferences
-        return loginResult.getVal();
+    }
+
+    public void autoLoginRequest(String e,String uuid,final VolleyCallback callback) {
+        final String email=e;
+        final String id=uuid;
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url ="http://192.168.1.99:80/onTimeServer/v1/autologin";
+
+        // Request a string response from the provided URL.
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST,url,null,new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject Response) {
+                Log.d("LOGIN",Response.toString());
+                try {
+                    if (!Response.getBoolean("error")){
+                       callback.onSuccess();
+                    }
+
+                    else
+                    {
+                        TextView errorview =(TextView) findViewById(R.id.error);
+                        errorview.setText(Response.getString("message"));
+                        errorview.setVisibility(View.VISIBLE);
+                    }
+                }
+                catch(JSONException e){
+                    Log.d("JSONException","Try Login Again");
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError e) {
+                e.printStackTrace();
+                TextView errorview = (TextView) findViewById(R.id.error);
+                if(e.networkResponse!=null)
+                    if( e.networkResponse.statusCode==400) {
+                        errorview.setText(getString(R.string.error_400));
+                        errorview.setVisibility(View.VISIBLE);
+                    }
+                    else{
+                        errorview.setText(getString(R.string.time_out));
+                        errorview.setVisibility(View.VISIBLE);
+                    }
+            }
+        }) {
+            @Override
+            public byte[] getBody(){
+                try
+                {
+                    final String body = "&email=" + email +  // assumes username is final and is url encoded.
+                            "&uuid=" + id;            // assumes password is final and is url encoded.
+                    return body.getBytes("utf-8");
+                }
+                catch (Exception ex) { }
+
+                return null;
+            }
+
+            @Override
+            public String getBodyContentType()
+            {
+                return "application/x-www-form-urlencoded";
+            }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError
+            {
+                Map<String, String> headers = new HashMap<String, String>();
+
+                headers.put("Accept", "application/json");
+
+                return headers;
+            }
+
+        };
+        // Add the request to the RequestQueue.
+        queue.add(jsonRequest);
+
     }
 
     public void registerClick(View view){

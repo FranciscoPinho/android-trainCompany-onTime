@@ -57,12 +57,49 @@ class DbOperations {
             return 1;
         }
     }
+    
+     /**
+     * Updates or creates session data
+     * @param String $email User login email id
+     * @param String $uuid User login password
+     * @param Boolean $state 1 means logged in, 0 logged out
+     */
+    public function createUpdateSession($email, $uuid,$state) {
+         $user_id = $this->getUserByEmail($email);
+         if($user_id==NULL){
+             return -1;
+         }
+        if (!$this->sessionExists($email,$uuid)) {
+            // insert query
+            $stmt = $this->conn->prepare("INSERT INTO user_sessions(user_id,device_uuid,is_logged_in) values(?, ?, ?)");
+            $stmt->bind_param("ssi", $user_id, $uuid, $state);
+            $result = $stmt->execute();
+            $stmt->close();
+            if ($result) { 
+                return 0;  // Session successfully inserted
+            } else {
+                return -1;   // Failed to create session
+            }
+        } else {
+            $stmt = $this->conn->prepare("UPDATE user_sessions
+                                          SET is_logged_in=?,last_updated=CURRENT_TIMESTAMP
+                                          WHERE user_id=? and device_uuid=?");
+            $stmt->bind_param("iss",$state, $user_id, $uuid);
+            $result = $stmt->execute();
+            $stmt->close();
+            if ($result) {
+                return 1;    // session updated
+            } else {
+                return -2; //update session failed
+            }
+        }
+    }
 
     /**
      * Checking user login
      * @param String $email User login email id
      * @param String $password User login password
-     * @return boolean/int(-1 if username not found, false if wrong password)
+     * @return int(-1 if username not found, 1 if wrong password)
      */
     public function checkLogin($email, $password) {
         // fetching user by email
@@ -91,7 +128,43 @@ class DbOperations {
             return -1;
         }
     }
+    
+     /**
+     * Checks if user has an active session
+     * @param String $email User login email id
+     * @param String $uuid uuid id associated with user's app installation
+     * @return int(-1 if user not found, 1 if the user has no current login session
+     */
+    public function autoLogin($email, $uuid) {
+        // fetching user by email
+        $stmt = $this->conn->prepare("SELECT is_logged_in,email FROM user_sessions
+                                      LEFT JOIN users ON user_sessions.user_id=users.id 
+                                      WHERE user_sessions.device_uuid=? AND email=?");
 
+        $stmt->bind_param("ss", $uuid,$email);
+
+        $stmt->execute();
+
+        $stmt->bind_result($is_logged_in,$email);
+
+        $stmt->store_result();
+
+        if ($stmt->num_rows > 0) {
+
+            $stmt->fetch();
+            $stmt->close();
+
+            if ($is_logged_in==1) {
+                return 0;
+            } else {
+                return 1;
+            }
+        } else {
+            $stmt->close();
+            return -1;
+        }
+    }
+    
     /**
      * Checking for duplicate user by email address
      * @param String $email email to check in db
@@ -106,20 +179,46 @@ class DbOperations {
         $stmt->close();
         return $num_rows > 0;
     }
+     /**
+     * Checking if a user session with this uuid and email exist
+     * @return boolean
+     */
+    private function sessionExists($email,$uuid) {
+        $stmt = $this->conn->prepare("SELECT user_sessions.id,email FROM user_sessions
+                                      LEFT JOIN users ON user_sessions.user_id=users.id 
+                                      WHERE user_sessions.device_uuid=? AND email=?");
+        $stmt->bind_param("ss", $uuid,$email);
+        $stmt->execute();
+        $stmt->store_result();
+        $num_rows = $stmt->num_rows;
+        $stmt->close();
+        return $num_rows > 0;
+    }
+
 
     /**
      * Fetching user by email
      * @param String $email User email id
      */
     public function getUserByEmail($email) {
-        $stmt = $this->conn->prepare("SELECT name, email FROM users WHERE email = ?");
+        $stmt = $this->conn->prepare("SELECT id FROM users WHERE email = ?");
         $stmt->bind_param("s", $email);
-        if ($stmt->execute()) {
-            $user = $stmt->get_result()->fetch_assoc();
+        
+        $stmt->execute();
+
+        $stmt->bind_result($user);
+
+        $stmt->store_result();
+
+        if ($stmt->num_rows > 0) {
+
+            $stmt->fetch();
             $stmt->close();
+
             return $user;
         } else {
-            return NULL;
+            $stmt->close();
+            return -1;
         }
     }
 
@@ -215,6 +314,31 @@ EOF;
       
     }
 
+      /**
+     * Creating new credit card
+     * @param String $name credit card owner name
+     * @param String $userID user id in database associated with this card
+     * @param String $number credit card number
+     */
+    public function addCreditCard($name, $email, $number) {
+            // insert query
+            $stmt = $this->conn->prepare("INSERT INTO creditcard(name, user_email, number) values(?, ?, ?)");
+            $stmt->bind_param("sss", $name, $email, $number);
+
+            $result = $stmt->execute();
+
+            $stmt->close();
+
+            // Check for successful insertion
+            if ($result) {
+                // Credit card successfully created
+                return 0;
+            } else {
+                // Failed to add credit card
+                return -1;
+            }
+   
+    }
 
 
 }
