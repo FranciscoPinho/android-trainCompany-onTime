@@ -72,7 +72,8 @@ public class loginActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(){
                     Log.d("LOGIN","AUTO LOGIN SUCCESS");
-                    //intent for logged in
+                    Intent onTimeIntent = new Intent(loginActivity.this,onTimeActivity.class);
+                    startActivity(onTimeIntent);
                 }
             });
         }
@@ -90,7 +91,8 @@ public class loginActivity extends AppCompatActivity {
             @Override
             public void onSuccess(){
                 saveSharedPreferences(email);
-                //intent for logged in
+                Intent onTimeIntent = new Intent(loginActivity.this,onTimeActivity.class);
+                startActivity(onTimeIntent);
             }
         });
 
@@ -103,7 +105,7 @@ public class loginActivity extends AppCompatActivity {
 
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url ="http://192.168.1.99:80/onTimeServer/v1/login";
+        String url ="http://"+getString(R.string.server)+"/onTimeServer/v1/login";
 
         // Request a string response from the provided URL.
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST,url,null,new Response.Listener<JSONObject>() {
@@ -181,7 +183,7 @@ public class loginActivity extends AppCompatActivity {
         final String id=uuid;
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url ="http://192.168.1.99:80/onTimeServer/v1/autologin";
+        String url ="http://"+getString(R.string.server)+"/onTimeServer/v1/autologin";
 
         // Request a string response from the provided URL.
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST,url,null,new Response.Listener<JSONObject>() {

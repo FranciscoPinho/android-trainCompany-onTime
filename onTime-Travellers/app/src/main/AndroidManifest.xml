@@ -21,11 +21,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".registerActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait">
-
-        </activity>
+        <activity android:name=".registerActivity" />
+        <activity
+            android:name=".onTimeActivity"
+            android:label="@string/title_activity_ontime"
+            ></activity>
     </application>
 
 </manifest>

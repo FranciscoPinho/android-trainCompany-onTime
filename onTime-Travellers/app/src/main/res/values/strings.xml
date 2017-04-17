@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">onTime-Travellers</string>
+    <string name="server">192.168.1.99:80</string>
     <string name="actionbar_title">OnTime</string>
     <string name="login_btn">Login</string>
     <string name="register_btn">Don\'t Have An Account? Register</string>
@@ -20,4 +21,7 @@
     <string name="email_repeat_err">Email already registered in another account</string>
     <string name="creditnr_err">Invalid credit card number</string>
     <string name="email_err">Invalid email</string>
+    <string name="title_activity_ontime">onTime</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 </resources>

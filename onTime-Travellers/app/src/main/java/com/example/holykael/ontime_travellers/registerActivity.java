@@ -169,7 +169,7 @@ public class registerActivity extends AppCompatActivity {
 
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url ="http://192.168.1.99:80/onTimeServer/v1/register";
+        String url ="http://"+getString(R.string.server)+"/onTimeServer/v1/register";
 
         // Request a string response from the provided URL.
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST,url,null,new Response.Listener<JSONObject>() {
