@@ -290,7 +290,7 @@ EOF;
      * @param String $user_id id of the user
      */
     public function getSchedules() {
-        $sql="SELECT stationschedule.id,train.designation AS train,
+        $sql="SELECT stationschedule.id ,train.designation AS train,
              (SELECT name FROM station WHERE stationschedule.station=station.id) AS origin,
              (SELECT name FROM station WHERE stationschedule.nextstation=station.id) AS destination,
               distance,departureTime,arrivalTime 

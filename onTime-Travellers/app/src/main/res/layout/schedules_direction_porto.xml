@@ -4,10 +4,18 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="20dp"
+    android:weightSum="1"
    >
 
-
+    <ImageView
+        android:id="@+id/banner"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="top"
+        android:layout_marginBottom="30dp"
+        android:layout_weight="0.50"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/trainbanner" />
 
     <GridLayout
         android:layout_width="wrap_content"
@@ -100,7 +108,7 @@
 
         <TextView
             android:id="@+id/gaialabel"
-            android:layout_width="70dp"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:layout_column="0"
             android:layout_row="5"
@@ -147,7 +155,7 @@
 
         <TextView
             android:id="@+id/aveirolabel"
-            android:layout_width="70dp"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:layout_column="0"
             android:layout_row="4"
@@ -193,7 +201,7 @@
 
         <TextView
             android:id="@+id/coimbralabel"
-            android:layout_width="70dp"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:layout_column="0"
             android:layout_row="3"
@@ -242,7 +250,7 @@
 
         <TextView
             android:id="@+id/orientelabel"
-            android:layout_width="70dp"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:layout_column="0"
             android:layout_row="2"

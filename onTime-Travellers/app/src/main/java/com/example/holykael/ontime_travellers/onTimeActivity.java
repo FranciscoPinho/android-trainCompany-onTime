@@ -20,6 +20,20 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class onTimeActivity extends AppCompatActivity {
 
     /**
@@ -40,6 +54,7 @@ public class onTimeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_ontime);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.actionBar);
@@ -92,6 +107,67 @@ public class onTimeActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void requestSchedules(final VolleyCallback callback){
+
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url ="http://"+getString(R.string.server)+"/onTimeServer/v1/schedules";
+
+        // Request a string response from the provided URL.
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET,url,null,new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject Response) {
+                Log.d("REGISTER",Response.toString());
+                try {
+                    switch(Response.getInt("error")){
+                        case 0:
+                            callback.onSuccess();
+                            break;
+                        default:
+                            TextView errorview =(TextView) findViewById(R.id.error);
+                            errorview.setText(Response.getString("message"));
+                            errorview.setVisibility(View.VISIBLE);
+                            break;
+                    }
+                }
+                catch(JSONException e){
+                    Log.d("JSONException","Couldn't get schedules");
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError e) {
+                e.printStackTrace();
+                TextView errorview = (TextView) findViewById(R.id.error);
+                if(e.networkResponse!=null)
+                    if( e.networkResponse.statusCode==400) {
+                        errorview.setText(getString(R.string.error_400_register));
+                        errorview.setVisibility(View.VISIBLE);
+                    }
+                    else{
+                        errorview.setText(getString(R.string.time_out));
+                        errorview.setVisibility(View.VISIBLE);
+                    }
+            }
+        }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError
+            {
+                Map<String, String> headers = new HashMap<String, String>();
+
+                headers.put("Accept", "application/json");
+
+                return headers;
+            }
+
+        };
+        // Add the request to the RequestQueue.
+        queue.add(jsonRequest);
+
+    }
+
 
     /**
      * A placeholder fragment containing a simple view.
