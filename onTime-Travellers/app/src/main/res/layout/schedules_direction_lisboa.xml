@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="20dp"
+    >
+
+
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+       >
+
+        <TextView
+            android:id="@+id/L46"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_column="4"
+            android:layout_row="6"
+            android:textAlignment="center"
+            android:text="15:25" />
+
+        <TextView
+            android:id="@+id/L36"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_column="3"
+            android:layout_row="6"
+            android:textAlignment="center"
+            android:text="13:25" />
+
+        <TextView
+            android:id="@+id/L26"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_row="6"
+            android:textAlignment="center"
+            android:text="11:25" />
+
+
+        <TextView
+            android:id="@+id/L16"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_row="6"
+            android:textAlignment="center"
+            android:text="09:25" />
+
+        <TextView
+            android:id="@+id/apolonialabel"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_row="6"
+            android:text="Santa Apolónia"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/L45"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_column="4"
+            android:layout_row="5"
+            android:textAlignment="center"
+            android:text="15:16" />
+
+        <TextView
+            android:id="@+id/L35"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_column="3"
+            android:layout_row="5"
+            android:textAlignment="center"
+            android:text="13:16" />
+
+        <TextView
+            android:id="@+id/L25"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_row="5"
+            android:textAlignment="center"
+            android:text="11:16" />
+
+
+        <TextView
+            android:id="@+id/L15"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_row="5"
+            android:textAlignment="center"
+            android:text="09:16" />
+
+        <TextView
+            android:id="@+id/orientelabel"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_row="5"
+            android:text="Oriente"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"/>
+
+        <TextView
+            android:id="@+id/L44"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_column="4"
+            android:layout_row="4"
+            android:textAlignment="center"
+            android:text="13:46" />
+
+        <TextView
+            android:id="@+id/L34"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_column="3"
+            android:layout_row="4"
+            android:textAlignment="center"
+            android:text="11:46" />
+
+        <TextView
+            android:id="@+id/L24"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_row="4"
+            android:textAlignment="center"
+            android:text="09:46" />
+
+
+        <TextView
+            android:id="@+id/L14"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_row="4"
+            android:textAlignment="center"
+            android:text="07:46" />
+
+        <TextView
+            android:id="@+id/coimbralabel"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_row="4"
+            android:text="Coimbra"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"/>
+
+        <TextView
+            android:id="@+id/L43"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_column="3"
+            android:layout_row="3"
+            android:textAlignment="center"
+            android:text="13:21" />
+
+        <TextView
+            android:id="@+id/L33"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_row="3"
+            android:textAlignment="center"
+            android:text="11:21" />
+
+        <TextView
+            android:id="@+id/L23"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_row="3"
+            android:textAlignment="center"
+            android:text="09:21" />
+
+
+        <TextView
+            android:id="@+id/L13"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_row="3"
+            android:textAlignment="center"
+            android:text="07:21" />
+
+        <TextView
+            android:id="@+id/aveirolabel"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_row="3"
+            android:text="Aveiro"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"/>
+
+
+
+
+        <TextView
+            android:id="@+id/L42"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_column="3"
+            android:layout_row="2"
+            android:textAlignment="center"
+            android:text="12:35" />
+
+        <TextView
+            android:id="@+id/L32"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_row="2"
+            android:textAlignment="center"
+            android:text="10:35" />
+
+        <TextView
+            android:id="@+id/L22"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_row="2"
+            android:textAlignment="center"
+            android:text="08:35" />
+
+
+        <TextView
+            android:id="@+id/L12"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_row="2"
+            android:textAlignment="center"
+            android:text="06:35" />
+
+        <TextView
+            android:id="@+id/gaialabel"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_row="2"
+            android:text="Gaia"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"/>
+
+        <TextView
+            android:id="@+id/L41"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_column="4"
+            android:layout_row="1"
+            android:textAlignment="center"
+            android:text="12:25" />
+
+        <TextView
+            android:id="@+id/L31"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_column="3"
+            android:layout_row="1"
+            android:textAlignment="center"
+            android:text="10:25" />
+
+        <TextView
+            android:id="@+id/L21"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_row="1"
+            android:textAlignment="center"
+            android:text="08:25" />
+
+        <TextView
+            android:id="@+id/L11"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_row="1"
+            android:textAlignment="center"
+            android:text="06:25" />
+
+        <TextView
+            android:id="@+id/textView18"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_row="1"
+            android:text="São Bento"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"/>
+
+
+        <TextView
+            android:id="@+id/trainL1"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_row="0"
+            android:text="L1"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/trainL2"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_row="0"
+            android:text="L2"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/trainL3"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_row="0"
+            android:textAlignment="center"
+            android:text="L3"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/trainL4"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_row="0"
+            android:text="L4"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold" />
+    </GridLayout>
+
+</LinearLayout>

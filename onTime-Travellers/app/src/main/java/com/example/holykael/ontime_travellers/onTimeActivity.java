@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,7 +46,7 @@ public class onTimeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(),'L');
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -58,8 +59,12 @@ public class onTimeActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                ScheduleFragment fragment = (ScheduleFragment) mSectionsPagerAdapter.instantiateItem(mViewPager, 0);
+
+                if(fragment.getDirection()=='P')
+                    fragment.setLayoutDir('L');
+                else fragment.setLayoutDir('P');;
+                mViewPager.getAdapter().notifyDataSetChanged();
             }
         });
 
@@ -124,20 +129,79 @@ public class onTimeActivity extends AppCompatActivity {
     }
 
     /**
+     * A placeholder fragment containing a simple view.
+     */
+    public static class ScheduleFragment extends Fragment {
+        private char layoutDir = 'L';
+        public ScheduleFragment() {
+        }
+        public void setLayoutDir(char dir){
+            layoutDir=dir;
+        }
+        public char getDirection(){
+            return layoutDir;
+        }
+        /**
+         * Returns a new instance of this fragment for the given section
+         * number.
+         */
+        public static ScheduleFragment newInstance(char layoutDir) {
+            ScheduleFragment fragment = new ScheduleFragment();
+            fragment.setLayoutDir(layoutDir);
+            Bundle args = new Bundle();
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView;
+            if(this.layoutDir=='P')
+             rootView = inflater.inflate(R.layout.schedules_direction_porto, container, false);
+            else  rootView = inflater.inflate(R.layout.schedules_direction_lisboa, container, false);
+            return rootView;
+        }
+    }
+
+    /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
+        char direction;
+        public SectionsPagerAdapter(FragmentManager fm,char dir) {
             super(fm);
+            direction=dir;
         }
 
         @Override
         public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+            switch (position) {
+                case 0:
+                    if(direction=='P')
+                    return ScheduleFragment.newInstance('P');
+                    else return ScheduleFragment.newInstance('L');
+                case 1:
+                    return PlaceholderFragment.newInstance(position+1);
+                case 2:
+                    return PlaceholderFragment.newInstance(position+1);
+                default:
+                    return PlaceholderFragment.newInstance(position+1);
+            }
+        }
+        // Force a refresh of the page when a different fragment is displayed
+        @Override
+        public int getItemPosition(Object object) {
+            // this method will be called for every fragment in the ViewPager
+            if (object instanceof PlaceholderFragment) {
+                return POSITION_UNCHANGED; // don't force a reload
+            } else {
+                // POSITION_NONE means something like: this fragment is no longer valid
+                // triggering the ViewPager to re-build the instance of this fragment.
+                return POSITION_NONE;
+
+        }
         }
 
         @Override
