@@ -137,6 +137,7 @@ public class onTimeActivity extends AppCompatActivity {
                         final Spinner origin = (Spinner) findViewById(R.id.originspinner);
                         final Spinner destination = (Spinner) findViewById(R.id.destspinner);
                         final Spinner trains = (Spinner) findViewById(R.id.trainspinner);
+                        origin.setSelection(0);
                         destination.setSelection(5);
                         updateTrainSpinner(trains,origin.getSelectedItem().toString(),destination.getSelectedItem().toString());
                         destination.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -468,19 +469,16 @@ public class onTimeActivity extends AppCompatActivity {
                                         public void onSuccess() {
 
                                         }
-
                                         @Override
                                         public void onSuccess(JSONObject response) {
                                             String payload="";
                                             try {
                                                 for (int i = 0; i < response.names().length(); i++) {
-                                                    if( response.names().getString(i).equals("hash"))
-                                                        Log.d("HASH",response.get(response.names().getString(i)).toString());
-                                                    if(!response.names().getString(i).equals("error") && !response.names().getString(i).equals("message")  && !response.names().getString(i).equals("hash")){
+                                                    if(!response.names().getString(i).equals("error") && !response.names().getString(i).equals("message")){
                                                         payload += response.names().getString(i) +"="+response.get(response.names().getString(i))+";";
                                                     }
                                                 }
-
+                                                Log.d("Payload",payload);
                                                 mService.generateQRCode(payload);
                                                 updateFileList();
 

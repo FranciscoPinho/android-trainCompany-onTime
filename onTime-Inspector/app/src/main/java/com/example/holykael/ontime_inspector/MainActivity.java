@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -42,7 +45,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import static android.R.id.input;
 
 public class MainActivity extends AppCompatActivity {
     static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
@@ -51,36 +53,34 @@ public class MainActivity extends AppCompatActivity {
     String uid;
     int validation;
     String signature;
+    String trainChoice = "L1";
 
-    ArrayList<Ticket> tickets = new ArrayList<>();
-
+    TicketDatabase tickets;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Toolbar actionBar = (Toolbar) findViewById(R.id.actionBar);
         setSupportActionBar(actionBar);
         setContentView(R.layout.activity_main);
+        tickets = new TicketDatabase(this);
         message = (TextView) findViewById(R.id.message);
-        requestTickets(new VolleyCallback(){
-            @Override
-            public void onSuccess(){
+        final Spinner trains = (Spinner) findViewById(R.id.listtrains);
+        trains.setSelection(0);
+        trains.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                trainChoice=trains.getSelectedItem().toString();
             }
-            @Override
-            public void onSuccess(JSONObject response){
-                try {
-                    for (int i = 0; i < response.names().length(); i++) {
-                        if(!response.names().getString(i).equals("error") && !response.names().getString(i).equals("message")){
-                            Ticket ss = new Ticket((JSONObject) response.get(response.names().getString(i)));
-                            tickets.add(ss);
-                            Log.d("Ticket",ss.getUuid());
-                        }
-                    }
-                }
-                catch(JSONException e){
-                    Log.d("PARSING",e.getMessage());
-                }
+            public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+
+
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        tickets.close();
     }
 
     @Override
@@ -154,15 +154,15 @@ public class MainActivity extends AppCompatActivity {
                 result.setText("This ticket was already validated");
                 return false;
             }
-            PublicKey pub = getPublicKeyFromString("-----BEGIN PUBLIC KEY-----\n" +
-                    "MFswDQYJKoZIhvcNAQEBBQADSgAwRwJAW1t8UKirZHjfpAH9+dpUmaj2SFgnVU0L\n" +
-                    "4KqfdDiZQzPQNYbAasGJ1BbS3ydUN7NOpYciESxtI82PlN1B5QoTVQIDAQAB\n" +
-                    "-----END PUBLIC KEY-----");
+            PublicKey pub = getPublicKeyFromString("MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBANcSMei15vwZYZx+lnqzoFbaMayFdtzf\n" +
+                    "KJPle1RblYt+r1Kt/XfQSxaAS1tr2cBFWLewws1ijb1oJ7YkPR2ybAECAwEAAQ==");
             Signature sg = Signature.getInstance("SHA1WithRSA");
-            //sg.initVerify(pub);                                          // supply the public key
-            //sg.update(hash.getBytes());                                  // supply the data to verify
-            //return sg.verify(signature.getBytes());                      // verify the signature (output) using the original data
-            return signature.equals(hash);
+             //sg.initVerify(pub);                                       // supply the public key
+             //sg.update(hash.getBytes());                                // supply the data to verify
+             //signature=signature + "==";
+             //Log.d("SIG","im here");
+             //return sg.verify(signature.getBytes(),0,88);                      // verify the signature (output) using the original dat
+             return signature.equals(hash);
         }
         catch (Exception ex) {
             Log.d("Exception",ex.getMessage());
@@ -180,13 +180,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
     public String makeHash(String uid){
-        Ticket t=findTicket(uid);
+        Cursor t=findTicket(uid);
         AeSimpleSHA1 sha = new AeSimpleSHA1();
         if(t!=null)
         try {
-            if(t.getValidation()==1)
+            if(tickets.getValidation(t)==1)
                 return "error";
-            String ret =sha.SHA1(t.getUuid());
+            String ret =sha.SHA1(tickets.getUuid(t));
             return ret;
         }
         catch(Exception e){
@@ -194,28 +194,11 @@ public class MainActivity extends AppCompatActivity {
         }
         return "";
     }
-    public Ticket findTicket(String id){
-        Log.d("WANTED",id);
-        Ticket t = null;
-        for(int i=0;i<tickets.size();i++){
-            Log.d("SIZE",""+tickets.size());
-           Log.d("LOOKING",tickets.get(i).getUuid());
-            if(tickets.get(i).getUuid().equals(id)) {
-                t = tickets.get(i);
-                return t;
-            }
-        }
-        return null;
+    public Cursor findTicket(String id){
+        return tickets.getById(id);
     }
-    public Ticket findUpdateTicket(String id){
-        Ticket t = null;
-        for(int i=0;i<tickets.size();i++) {
-            if (tickets.get(i).getUuid().equals(id)){
-                tickets.get(i).setValidation(1);
-                return t;
-             }
-        }
-        return null;
+    public void findUpdateTicket(String id){
+        tickets.update(id,1);
     }
     public void tokenizeFinal(String string){
 
@@ -239,8 +222,6 @@ public class MainActivity extends AppCompatActivity {
     }
     public static RSAPublicKey getPublicKeyFromString(String key) throws IOException, GeneralSecurityException {
         String publicKeyPEM = key;
-        publicKeyPEM = publicKeyPEM.replace("-----BEGIN PUBLIC KEY-----\n", "");
-        publicKeyPEM = publicKeyPEM.replace("-----END PUBLIC KEY-----", "");
         byte[] encoded = Base64.decode(publicKeyPEM,Base64.DEFAULT);
         KeyFactory kf = KeyFactory.getInstance("RSA");
         RSAPublicKey pubKey = (RSAPublicKey) kf.generatePublic(new X509EncodedKeySpec(encoded));
@@ -294,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
             public byte[] getBody(){
                 try
                 {
-                    final String body = "&trainDesignation="+"P3";
+                    final String body = "&trainDesignation="+trainChoice;
                     return body.getBytes("utf-8");
                 }
                 catch (Exception ex) { }
@@ -321,6 +302,132 @@ public class MainActivity extends AppCompatActivity {
         // Add the request to the RequestQueue.
         queue.add(jsonRequest);
 
+    }
+
+    public void syncTicket(final VolleyCallback callback, final int val, final String id){
+
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url ="http://"+getString(R.string.server)+"/onTimeServer/v1/sync";
+
+        // Request a string response from the provided URL.
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.PUT,url,null,new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject Response) {
+                try {
+                    switch(Response.getInt("error")){
+                        case 0:
+                            callback.onSuccess(Response);
+                            TextView errorview =(TextView) findViewById(R.id.error);
+                            errorview.setText(Response.getString("message"));
+                            errorview.setVisibility(View.VISIBLE);
+                            break;
+                        default:
+                            errorview =(TextView) findViewById(R.id.error);
+                            errorview.setText(Response.getString("message"));
+                            errorview.setVisibility(View.VISIBLE);
+                            break;
+                    }
+                }
+                catch(JSONException e){
+                    Log.d("JSONException",e.getMessage());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError e) {
+                e.printStackTrace();
+                TextView errorview = (TextView) findViewById(R.id.error);
+                if(e.networkResponse!=null)
+                    if( e.networkResponse.statusCode==400) {
+                        errorview.setText(getString(R.string.error_400));
+                        errorview.setVisibility(View.VISIBLE);
+                    }
+                    else{
+                        errorview.setText(getString(R.string.error_timeout));
+                        errorview.setVisibility(View.VISIBLE);
+                    }
+            }
+        }) {
+
+            @Override
+            public byte[] getBody(){
+                try
+                {
+                    final String body = "&uuid="+id+
+                                        "&validation="+val;
+                    return body.getBytes("utf-8");
+                }
+                catch (Exception ex) { }
+
+                return null;
+            }
+
+            @Override
+            public String getBodyContentType()
+            {
+                return "application/x-www-form-urlencoded";
+            }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError
+            {
+                Map<String, String> headers = new HashMap<String, String>();
+
+                headers.put("Accept", "application/json");
+
+                return headers;
+            }
+
+        };
+        // Add the request to the RequestQueue.
+        queue.add(jsonRequest);
+
+    }
+    public void sync(View view){
+        Cursor c = tickets.getAll();
+        while (c.moveToNext()) {
+            syncTicket(new VolleyCallback() {
+                @Override
+                public void onSuccess() {
+
+                }
+
+                @Override
+                public void onSuccess(JSONObject o) {
+
+                }
+            },tickets.getValidation(c),tickets.getUuid(c));
+        }
+    }
+    public void downloadTickets(View view){
+        requestTickets(new VolleyCallback(){
+            @Override
+            public void onSuccess(){
+            }
+            @Override
+            public void onSuccess(JSONObject response){
+                try {
+                    for (int i = 0; i < response.names().length(); i++) {
+                        if(!response.names().getString(i).equals("error") && !response.names().getString(i).equals("message")){
+                            Ticket ss = new Ticket((JSONObject) response.get(response.names().getString(i)));
+                            tickets.insert(ss);
+                            Log.d("Ticket",ss.getUuid());
+                        }
+                    }
+                }
+                catch(JSONException e){
+                    Log.d("PARSING",e.getMessage());
+                }
+            }
+        });
+    }
+
+    public void listView(View view){
+        Intent i=new Intent(MainActivity.this, TicketList.class);
+        startActivity(i);
+    }
+    public void EmptyDB(View view){
+        tickets.clearDatabase();
     }
     public class AeSimpleSHA1 {
         private String convertToHex(byte[] data) {

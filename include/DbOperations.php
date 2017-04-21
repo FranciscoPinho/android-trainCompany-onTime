@@ -267,7 +267,7 @@ EOF;
                 $response["message"] = "Oops! An error occurred while purchasing ticket! Database may be down";
                 return $response;
             }
-            $signature=bin2hex($encrypted_signature);
+            $signature=base64_encode($encrypted_signature);
             $response = array(
                 'id' => $uuid4,
                 'userID' => $userID,
@@ -278,11 +278,9 @@ EOF;
                 'departureTime' => $departureTime,
                 'arrivalTime' => $arrivalTime,
                 'price' => $price,
-                'signature' => $hash,
-                
+                'signature' => $hash
             );
             $response["error"] = 0;
-            $response["hash"]= $hash;
             return $response;
         } else {
             $response["error"] = -1;
@@ -360,7 +358,7 @@ EOF;
             }
       
     }
-
+    
 
       /**
      * Creating new credit card
@@ -383,6 +381,28 @@ EOF;
                 return 0;
             } else {
                 // Failed to add credit card
+                return -1;
+            }
+   
+    }
+    
+    /**
+     * Syncs a ticket
+     * @param $uuid uuid of ticket to update
+     * @param $val validation int
+     */
+    public function syncTickets($uuid,$val) {
+   
+            $stmt = $this->conn->prepare("UPDATE ticket SET validation=? WHERE id=?");
+            $stmt->bind_param("is", $val,$uuid);
+            $result = $stmt->execute();
+
+            $stmt->close();
+
+            // Check for successful update
+            if ($result) {
+                return 0;
+            } else {
                 return -1;
             }
    

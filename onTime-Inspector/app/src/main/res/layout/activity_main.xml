@@ -6,15 +6,17 @@
     android:layout_height="match_parent"
     android:background="#ffffff"
     android:orientation="vertical"
-    tools:context="com.example.holykael.ontime_inspector.MainActivity" >
+    tools:context="com.example.holykael.ontime_inspector.MainActivity">
+
     <include layout="@layout/actionbar_layout" />
+
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center|top"
         android:layout_margin="20dp"
-        android:text="Scan"
+        android:text="Ticket Inspector"
         android:textColor="#000000"
         android:textSize="30sp" />
 
@@ -27,32 +29,105 @@
         android:gravity="center"
         android:onClick="scanQR"
         android:text="QR Code"
-        android:textSize="18sp" >
-    </Button>
+        android:textSize="18sp"></Button>
 
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Train Selection" />
+
+    <Spinner
+        android:id="@+id/listtrains"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:entries="@array/trains">
+
+    </Spinner>
 
     <LinearLayout
-        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/download"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:background="@color/colorPrimary"
+            android:onClick="downloadTickets"
+            android:text="@string/btn_download"
+            android:textColor="@color/fontButton" />
+
+        <Button
+            android:id="@+id/syncdb"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:background="@color/colorPrimary"
+            android:onClick="sync"
+            android:text="@string/btn_sync"
+            android:textColor="@color/fontButton" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/listTickets"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/colorPrimary"
+            android:onClick="listView"
+            android:text="@string/btn_list"
+            android:textColor="@color/fontButton" />
+
+        <Button
+            android:id="@+id/clear"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:background="@color/colorPrimary"
+            android:onClick="EmptyDB"
+            android:text="Clear Database"
+            android:textColor="@color/fontButton" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="bottom">
+        android:gravity="bottom"
+        android:orientation="vertical">
+
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/validationresult"
-            />
-        <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
             android:id="@+id/error"
-            android:visibility="invisible"
-            android:textColor="@android:color/holo_red_dark"
-            />
-        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@android:color/holo_red_dark"
+            android:visibility="invisible" />
+
+        <TextView
             android:id="@+id/message"
-            />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
 </LinearLayout>

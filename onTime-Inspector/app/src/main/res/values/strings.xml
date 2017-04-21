@@ -1,7 +1,23 @@
 <resources>
     <string name="app_name">onTime-Inspector</string>
-    <string name="server">172.30.29.213:80</string>
+    <string name="server">192.168.0.101:80</string>
     <string name="actionbar_title">OnTime</string>
     <string name="error_timeout">Connection Timed Out</string>
     <string name="error_400">Invalid request</string>
+    <string name="btn_download">Download Ticket Data</string>
+    <string name="btn_sync">Sync</string>
+    <string name="btn_list">List Tickets</string>
+    <string-array name="trains">
+        <item>L1</item>
+        <item>L2</item>
+        <item>L3</item>
+        <item>L4</item>
+        <item>P1</item>
+        <item>P2</item>
+        <item>P3</item>
+        <item>P4</item>
+    </string-array>
+    <string name="title_activity_ticket_view">TicketView</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_ticket_list">ticketList</string>
 </resources>

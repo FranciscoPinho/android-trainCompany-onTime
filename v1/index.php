@@ -210,7 +210,7 @@ $app->post('/login', function() use ($app) {
             }
         });
         
-         /**
+ /**
  * autoLogin
  * url - /autologin
  * method - POST
@@ -237,6 +237,32 @@ $app->post('/autologin', function() use ($app) {
             case -1:
                 $response["error"] = true;
                 $response["message"] = "User not found";
+                echoRespnse(202, $response);
+                break;
+            }
+        });
+        
+/**
+ * Sync ticket data
+ * url - /sync
+ * method - PUT
+ */
+$app->put('/sync', function() use ($app) {   
+           verifyRequiredParams(array('uuid', 'validation'));
+            // reading post params
+            $id = $app->request->put('uuid');
+            $val  = $app->request->put('validation');
+            $db = new DbOperations();
+            $res=$db->syncTickets($id,$val);
+            switch($res){
+             case 0:
+                $response["error"] = 0;
+                $response["message"] = "Sync successful";
+                echoRespnse(200, $response);
+                break;
+            case -1:
+                $response["error"] = -1;
+                $response["message"] = "Couldn't sync";
                 echoRespnse(202, $response);
                 break;
             }
