@@ -143,7 +143,8 @@ public class MainActivity extends AppCompatActivity {
         try {
 
             getSignature(contents);
-            String hash = makeHash(contents);
+            String hash = makeHash(uid);
+            Log.d("HASH",hash);
             if(hash.equals("error")){
                 TextView result = (TextView) findViewById(R.id.error);
                 result.setVisibility(View.VISIBLE);
@@ -168,13 +169,16 @@ public class MainActivity extends AppCompatActivity {
         StringTokenizer tokenizer = new StringTokenizer(contents,";");
         Log.d("D",""+tokenizer.countTokens());
         while(tokenizer.hasMoreTokens()) {
-            tokenizeFinal(tokenizer.nextToken());
+            String finals=tokenizer.nextToken();
+            Log.d("FINALS",finals);
+            tokenizeFinal(finals);
         }
 
     }
     public String makeHash(String uid){
         Ticket t=findTicket(uid);
         AeSimpleSHA1 sha = new AeSimpleSHA1();
+        if(t!=null)
         try {
             if(t.getValidation()==1)
                 return "error";
@@ -206,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void tokenizeFinal(String string){
 
-        StringTokenizer tokenizer = new StringTokenizer(contents,"=");
+        StringTokenizer tokenizer = new StringTokenizer(string,"=");
         while(tokenizer.hasMoreTokens()) {
             switch (tokenizer.nextToken()){
                 case "id":
@@ -241,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
         String url ="http://"+getString(R.string.server)+"/onTimeServer/v1/tickets";
 
         // Request a string response from the provided URL.
-        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET,url,null,new Response.Listener<JSONObject>() {
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST,url,null,new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject Response) {
                 try {
@@ -281,7 +285,7 @@ public class MainActivity extends AppCompatActivity {
             public byte[] getBody(){
                 try
                 {
-                    final String body = "&train="+"P3";
+                    final String body = "&trainDesignation="+"P3";
                     return body.getBytes("utf-8");
                 }
                 catch (Exception ex) { }

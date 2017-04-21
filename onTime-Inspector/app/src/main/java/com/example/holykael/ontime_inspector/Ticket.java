@@ -35,12 +35,13 @@ public class Ticket {
         try{
             uuid=obj.getString("id");
             userID=obj.getString("userID");
-            train=obj.getString("train");
+            train=obj.getString("trainDesignation");
+            validation=obj.getInt("validation");
             origin=obj.getString("origin");
             destination=obj.getString("destination");
             departureTime=obj.getString("departureTime");
             arrivalTime=obj.getString("arrivalTime");
-            price=obj.getDouble("distance");
+            price=obj.getDouble("price");
         }
         catch(JSONException e){
             Log.d("FAILED PARSING",e.getMessage());

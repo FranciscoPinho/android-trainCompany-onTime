@@ -326,16 +326,18 @@ EOF;
      */
     public function getTicketsTrain($train) {
      
-            $sql2="SELECT ticket.id,ticket.userID,ticket.trainDesignation,ticket.origin,ticket.destination,ticket.departureTime,ticket.arrivalTime,ticket.price,train.capacity
+            $sql2="SELECT ticket.id,ticket.userID,ticket.trainDesignation,ticket.validation,ticket.origin,ticket.destination,ticket.departureTime,ticket.arrivalTime,ticket.price,train.capacity
              FROM ticket
              INNER JOIN train on train.designation=ticket.trainDesignation 
              WHERE ticket.trainDesignation='".$train."' GROUP BY train.designation,ticket.id,train.capacity;
              ";
         $result2 = $this->conn->query($sql2);
         $tickets=array();
+        
              if ($result2->num_rows > 0) {
                 while($row2 = $result2->fetch_assoc()) {
-                        $tickets['id']=$row2['id'];
+                    $tickets[]=$row2;
+                   /*     $tickets['id']=$row2['id'];
                         $tickets['userID']=$row2['userID'];
                         $tickets['trainDesignation']=$row2['trainDesignation'];
                         $tickets['origin']=$row2['origin'];
@@ -343,8 +345,7 @@ EOF;
                         $tickets['departureTime']=$row2['departureTime'];
                         $tickets['arrivalTime']=$row2['arrivalTime'];
                         $tickets['price']=$row2['price'];
-                        $tickets['capacity']=$row2['capacity'];
-                        $signature = sha1('dkladkadjakldjaskdajlda');         
+                        $tickets['capacity']=$row2['capacity'];*/
                 }
                    $tickets["error"] = 0;
                    $tickets["message"] = "success";
