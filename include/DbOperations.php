@@ -246,7 +246,7 @@ class DbOperations {
         $result = $stmt->execute();
 
         $stmt->close();
-        $signature = sha1(json_encode(array($uuid4, $userID, $trainDesignation, $validation, $origin, $destination, $departureTime, $arrivalTime, $price)));
+        $signature = sha1($uuid4.$userID.$trainDesignation.$origin.$destination.$departureTime.$arrivalTime.$price);
         $encrypted_signature = null;
         if ($result) {
             $sql = "SELECT private FROM `encryption_keys`;";
@@ -261,8 +261,7 @@ $key
 -----END RSA PRIVATE KEY-----
 EOF;
                 
-                openssl_private_encrypt($signature, $encrypted_signature, openssl_pkey_get_private($key, "phrase"));
-              
+                openssl_private_encrypt($signature, $encrypted_signature, openssl_pkey_get_private($key, "phrase"));                          
             } else {
                 $response["error"] = true;
                 $response["message"] = "Oops! An error occurred while purchasing ticket! Database may be down";
@@ -320,6 +319,45 @@ EOF;
             }
       
     }
+    
+     /**
+     * Fetching the schedules of the service
+     * @param String $train train designation
+     */
+    public function getTicketsTrain($train) {
+     
+            $sql2="SELECT ticket.id,ticket.userID,ticket.trainDesignation,ticket.origin,ticket.destination,ticket.departureTime,ticket.arrivalTime,ticket.price,train.capacity
+             FROM ticket
+             INNER JOIN train on train.designation=ticket.trainDesignation 
+             WHERE ticket.trainDesignation='".$train."' GROUP BY train.designation,ticket.id,train.capacity;
+             ";
+        $result2 = $this->conn->query($sql2);
+        $tickets=array();
+             if ($result2->num_rows > 0) {
+                while($row2 = $result2->fetch_assoc()) {
+                        $tickets['id']=$row2['id'];
+                        $tickets['userID']=$row2['userID'];
+                        $tickets['trainDesignation']=$row2['trainDesignation'];
+                        $tickets['origin']=$row2['origin'];
+                        $tickets['destination']=$row2['destination'];
+                        $tickets['departureTime']=$row2['departureTime'];
+                        $tickets['arrivalTime']=$row2['arrivalTime'];
+                        $tickets['price']=$row2['price'];
+                        $tickets['capacity']=$row2['capacity'];
+                        $signature = sha1('dkladkadjakldjaskdajlda');         
+                }
+                   $tickets["error"] = 0;
+                   $tickets["message"] = "success";
+                   return $tickets;
+               }
+             else {
+                 $tickets["error"] = -1;
+                 $tickets["message"] = "Couldn't retrieve schedules! Database may be down";
+                 return $tickets;
+            }
+      
+    }
+
 
       /**
      * Creating new credit card

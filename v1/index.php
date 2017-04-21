@@ -147,7 +147,26 @@ $app->post('/ticket', function() use ($app) {
 
          
         });
+/**
+ * Ticket retrieval
+ * url - /tickets
+ * method - POST
+ * params - trainDesignation
+ */
+$app->post('/tickets', function() use ($app) {
+            // check for required params
+            verifyRequiredParams(array('trainDesignation'));
+ 
+          
+            // reading post params
 
+            $trainDesignation  = $app->request->post('trainDesignation');
+       
+          
+            $db = new DbOperations();
+            echoRespnse(200, $db->getTicketsTrain($trainDesignation));
+         
+        });
  /**
  * Ticket purchase/generation
  * url - /schedules

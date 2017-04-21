@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/actionBar"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    app:contentInsetEnd="20dp"
+    app:contentInsetStart="20dp"
+    android:background="@color/colorPrimary"
+    >
+
+    <ImageView
+        android:id="@+id/imageIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/inspectornobg" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/actionbar_title"
+        android:textStyle="bold"
+        android:textSize="17sp"
+        android:textColor="@color/fontButton"/>
+
+</android.support.v7.widget.Toolbar>

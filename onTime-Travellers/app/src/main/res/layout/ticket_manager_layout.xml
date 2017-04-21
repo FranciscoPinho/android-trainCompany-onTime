@@ -10,8 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_weight="0.6"
-        android:scaleType="centerInside"
+        android:layout_weight="0.65"
+        android:scaleType="center"
         app:srcCompat="@android:color/background_light" />
     <TextView
         android:id="@+id/ticketinfo"
