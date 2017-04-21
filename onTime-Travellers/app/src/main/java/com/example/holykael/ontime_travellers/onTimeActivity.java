@@ -474,7 +474,9 @@ public class onTimeActivity extends AppCompatActivity {
                                             String payload="";
                                             try {
                                                 for (int i = 0; i < response.names().length(); i++) {
-                                                    if(!response.names().getString(i).equals("error") && !response.names().getString(i).equals("message")){
+                                                    if( response.names().getString(i).equals("hash"))
+                                                        Log.d("HASH",response.get(response.names().getString(i)).toString());
+                                                    if(!response.names().getString(i).equals("error") && !response.names().getString(i).equals("message")  && !response.names().getString(i).equals("hash")){
                                                         payload += response.names().getString(i) +"="+response.get(response.names().getString(i))+";";
                                                     }
                                                 }

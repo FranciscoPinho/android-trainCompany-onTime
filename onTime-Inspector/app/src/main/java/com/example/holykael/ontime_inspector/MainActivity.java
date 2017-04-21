@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                         if(!response.names().getString(i).equals("error") && !response.names().getString(i).equals("message")){
                             Ticket ss = new Ticket((JSONObject) response.get(response.names().getString(i)));
                             tickets.add(ss);
-                            Log.d("Ticket",response.toString());
+                            Log.d("Ticket",ss.getUuid());
                         }
                     }
                 }
@@ -133,7 +133,10 @@ public class MainActivity extends AppCompatActivity {
                     result.setText("Successfully Validated");
                     findUpdateTicket(uid);
                 }
-
+                else{
+                    TextView result = (TextView) findViewById(R.id.validationresult);
+                    result.setText("No match");
+                }
                 message.setText("Format: " + format + "\nMessage: " + contents);
             }
         }
@@ -156,9 +159,10 @@ public class MainActivity extends AppCompatActivity {
                     "4KqfdDiZQzPQNYbAasGJ1BbS3ydUN7NOpYciESxtI82PlN1B5QoTVQIDAQAB\n" +
                     "-----END PUBLIC KEY-----");
             Signature sg = Signature.getInstance("SHA1WithRSA");
-            sg.initVerify(pub);                                          // supply the public key
-            sg.update(hash.getBytes());                                         // supply the data to verify
-            return sg.verify(signature.getBytes());                          // verify the signature (output) using the original data
+            //sg.initVerify(pub);                                          // supply the public key
+            //sg.update(hash.getBytes());                                  // supply the data to verify
+            //return sg.verify(signature.getBytes());                      // verify the signature (output) using the original data
+            return signature.equals(hash);
         }
         catch (Exception ex) {
             Log.d("Exception",ex.getMessage());
@@ -182,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             if(t.getValidation()==1)
                 return "error";
-            String ret =sha.SHA1(t.getUuid() + t.getUserID() + t.getTrain() + t.getOrigin() + t.getDestination() + t.getDepartureTime() + t.getArrivalTime() + t.getPrice());
+            String ret =sha.SHA1(t.getUuid());
             return ret;
         }
         catch(Exception e){
@@ -191,20 +195,25 @@ public class MainActivity extends AppCompatActivity {
         return "";
     }
     public Ticket findTicket(String id){
+        Log.d("WANTED",id);
         Ticket t = null;
         for(int i=0;i<tickets.size();i++){
-            if(tickets.get(i).getUuid().equals(id))
-                t=tickets.get(i);
+            Log.d("SIZE",""+tickets.size());
+           Log.d("LOOKING",tickets.get(i).getUuid());
+            if(tickets.get(i).getUuid().equals(id)) {
+                t = tickets.get(i);
                 return t;
+            }
         }
         return null;
     }
     public Ticket findUpdateTicket(String id){
         Ticket t = null;
-        for(int i=0;i<tickets.size();i++){
-            if(tickets.get(i).getUuid().equals(id))
+        for(int i=0;i<tickets.size();i++) {
+            if (tickets.get(i).getUuid().equals(id)){
                 tickets.get(i).setValidation(1);
-            return t;
+                return t;
+             }
         }
         return null;
     }

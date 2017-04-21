@@ -246,7 +246,7 @@ class DbOperations {
         $result = $stmt->execute();
 
         $stmt->close();
-        $signature = sha1($uuid4.$userID.$trainDesignation.$origin.$destination.$departureTime.$arrivalTime.$price);
+        $hash = sha1($uuid4);
         $encrypted_signature = null;
         if ($result) {
             $sql = "SELECT private FROM `encryption_keys`;";
@@ -261,7 +261,7 @@ $key
 -----END RSA PRIVATE KEY-----
 EOF;
                 
-                openssl_private_encrypt($signature, $encrypted_signature, openssl_pkey_get_private($key, "phrase"));                          
+                openssl_private_encrypt($hash, $encrypted_signature, openssl_pkey_get_private($key));                          
             } else {
                 $response["error"] = true;
                 $response["message"] = "Oops! An error occurred while purchasing ticket! Database may be down";
@@ -278,9 +278,11 @@ EOF;
                 'departureTime' => $departureTime,
                 'arrivalTime' => $arrivalTime,
                 'price' => $price,
-                'signature' => $signature
+                'signature' => $hash,
+                
             );
             $response["error"] = 0;
+            $response["hash"]= $hash;
             return $response;
         } else {
             $response["error"] = -1;
