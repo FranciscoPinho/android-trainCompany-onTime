@@ -128,12 +128,12 @@ $app->post('/register', function() use ($app) {
  */
 $app->post('/ticket', function() use ($app) {
             // check for required params
-            verifyRequiredParams(array('userID', 'trainDesignation', 'validation', 'origin', 'destination', 'departureTime', 'arrivalTime', 'price'));
+            verifyRequiredParams(array('email', 'trainDesignation', 'validation', 'origin', 'destination', 'departureTime', 'arrivalTime', 'price'));
  
             $response = array();
  
             // reading post params
-            $userID = $app->request->post('userID');
+            $email = $app->request->post('email');
             $trainDesignation  = $app->request->post('trainDesignation');
             $validation = $app->request->post('validation');
             $origin = $app->request->post('origin');
@@ -143,7 +143,7 @@ $app->post('/ticket', function() use ($app) {
             $price = $app->request->post('price');
           
             $db = new DbOperations();
-            echoRespnse(200, $db->generateTicket($userID, $trainDesignation, $validation, $origin, $destination, $departureTime, $arrivalTime, $price));
+            echoRespnse(200, $db->generateTicket($email, $trainDesignation, $validation, $origin, $destination, $departureTime, $arrivalTime, $price));
 
          
         });

@@ -1,6 +1,10 @@
 package com.example.holykael.ontime_travellers;
 
+import android.util.Log;
 
+import org.joda.time.LocalTime;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by Holykael on 4/20/2017.
@@ -12,10 +16,11 @@ public class StationSchedule {
     String origin;
     String destination;
     Double distance;
-    String departureTime;
-    String arrivalTime;
+    LocalTime departureTime;
+    LocalTime arrivalTime;
 
-    public StationSchedule(int i,String t,String src,String dest,Double di,String depar,String arriv){
+
+    public StationSchedule(int i,String t,String src,String dest,Double di,LocalTime depar,LocalTime arriv){
         id=i;
         trainDesignation=t;
         origin=src;
@@ -25,6 +30,20 @@ public class StationSchedule {
         arrivalTime=arriv;
     }
 
+    public StationSchedule(JSONObject obj){
+        try{
+            id=obj.getInt("id");
+            trainDesignation=obj.getString("train");
+            origin=obj.getString("origin");
+            destination=obj.getString("destination");
+            distance=obj.getDouble("distance");
+            departureTime=LocalTime.parse(obj.getString("departureTime"));
+            arrivalTime=LocalTime.parse(obj.getString("arrivalTime"));
+        }
+        catch(JSONException e){
+            Log.d("FAILED PARSING",e.getMessage());
+        }
+    }
 
     public int getId() {
         return id;
@@ -66,19 +85,19 @@ public class StationSchedule {
         this.distance = distance;
     }
 
-    public String getDepartureTime() {
+    public LocalTime getDepartureTime() {
         return departureTime;
     }
 
-    public void setDepartureTime(String departureTime) {
+    public void setDepartureTime(LocalTime departureTime) {
         this.departureTime = departureTime;
     }
 
-    public String getArrivalTime() {
+    public LocalTime getArrivalTime() {
         return arrivalTime;
     }
 
-    public void setArrivalTime(String arrivalTime) {
+    public void setArrivalTime(LocalTime arrivalTime) {
         this.arrivalTime = arrivalTime;
     }
 

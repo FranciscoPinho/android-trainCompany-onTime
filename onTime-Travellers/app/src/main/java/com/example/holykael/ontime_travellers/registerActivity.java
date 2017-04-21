@@ -146,6 +146,9 @@ public class registerActivity extends AppCompatActivity {
                     editor.commit();
                     finish();
                 }
+                @Override
+                public void onSuccess(JSONObject r){
+                }
             });
 
     }

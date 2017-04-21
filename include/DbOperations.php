@@ -198,7 +198,7 @@ class DbOperations {
 
     /**
      * Fetching user by email
-     * @param String $email User email id
+     * @param String $email User email 
      */
     public function getUserByEmail($email) {
         $stmt = $this->conn->prepare("SELECT id FROM users WHERE email = ?");
@@ -235,8 +235,12 @@ class DbOperations {
      * @param String $arrivalTime arrival to destination at this time
      * @param Double $price price paid for the ticket
      */
-    public function generateTicket($userID, $trainDesignation, $validation, $origin, $destination, $departureTime, $arrivalTime, $price) {
+    public function generateTicket($email, $trainDesignation, $validation, $origin, $destination, $departureTime, $arrivalTime, $price) {
         $uuid4 = Uuid::uuid4();
+        $userID = $this->getUserByEmail($email);
+         if($userID==NULL){
+             return -1;
+         }
         $stmt = $this->conn->prepare("INSERT INTO ticket(id,userID,trainDesignation,validation,origin,destination,departureTime,arrivalTime,price) VALUES(?,?,?,?,?,?,?,?,?)");
         $stmt->bind_param("sisissssd", $uuid4, $userID, $trainDesignation, $validation, $origin, $destination, $departureTime, $arrivalTime, $price);
         $result = $stmt->execute();
@@ -277,9 +281,10 @@ EOF;
                 'price' => $price,
                 'signature' => $signature
             );
+            $response["error"] = 0;
             return $response;
         } else {
-            $response["error"] = true;
+            $response["error"] = -1;
             $response["message"] = "Oops! An error occurred while purchasing ticket";
             return $response;
         }
@@ -304,10 +309,12 @@ EOF;
                  while($row = $result->fetch_assoc()) {
                         $schedules[]=$row;     
                     }
+                    $schedules["error"] = 0;
+                    $schedules["message"] = "success";
                     return $schedules;
             }
             else {
-                $response["error"] = true;
+                $response["error"] = -1;
                 $response["message"] = "Couldn't retrieve schedules! Database may be down";
                 return $response;
             }

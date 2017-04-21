@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#001a2a</color>
     <color name="colorAccent">#FF4081</color>
     <color name="fontButton">#DDDDDD</color>
+    <color name="spinnerChoice">#39CCCC</color>
 </resources>

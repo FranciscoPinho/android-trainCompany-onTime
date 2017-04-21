@@ -75,6 +75,9 @@ public class loginActivity extends AppCompatActivity {
                     Intent onTimeIntent = new Intent(loginActivity.this,onTimeActivity.class);
                     startActivity(onTimeIntent);
                 }
+                @Override
+                public void onSuccess(JSONObject r){
+                }
             });
         }
     }
@@ -93,6 +96,9 @@ public class loginActivity extends AppCompatActivity {
                 saveSharedPreferences(email);
                 Intent onTimeIntent = new Intent(loginActivity.this,onTimeActivity.class);
                 startActivity(onTimeIntent);
+            }
+            @Override
+            public void onSuccess(JSONObject r){
             }
         });
 

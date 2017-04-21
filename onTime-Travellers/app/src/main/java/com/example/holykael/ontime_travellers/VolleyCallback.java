@@ -1,5 +1,6 @@
 package com.example.holykael.ontime_travellers;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -8,4 +9,5 @@ import org.json.JSONObject;
 
 public interface VolleyCallback {
     void onSuccess();
+    void onSuccess(JSONObject o);
 }
