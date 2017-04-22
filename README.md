@@ -24,7 +24,7 @@ A collection of android applications to mimick ticket purchase/validation. This 
 * Local database cleanup – After sending updates to the server and after the trip is over, the inspector may want to clear the local datase. 
 * Ticket Validation – Read ticket signature through the QR Code and validate the ticket by generating a local hash based on downloaded ticket data and by comparing the hashes
 
-## Interface
+## Interface(Decrease zoom to see more clearly)
 
 ### OnTime Traveler
 ![18015843_1383532288352161_1470635047_o](https://cloud.githubusercontent.com/assets/9083330/25300843/7948d020-2710-11e7-9462-80284a19ee3c.png)
