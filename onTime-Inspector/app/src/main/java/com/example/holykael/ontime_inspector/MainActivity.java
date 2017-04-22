@@ -144,8 +144,8 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean validateTicket(String contents){
         try {
-
             getSignature(contents);
+            Log.d("HASH","WHAT'S GOING ON");
             String hash = makeHash(uid);
             Log.d("HASH",hash);
             if(hash.equals("error")){
@@ -179,15 +179,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-    public String makeHash(String uid){
-        Cursor t=findTicket(uid);
-        AeSimpleSHA1 sha = new AeSimpleSHA1();
+    public String makeHash(String id){
+        Log.d("UID BEFORE",id);
+        Cursor t=findTicket(id);
+
         if(t!=null)
         try {
             if(tickets.getValidation(t)==1)
                 return "error";
-            String ret =sha.SHA1(tickets.getUuid(t));
-            return ret;
+            return sha256(tickets.getUuid(t));
         }
         catch(Exception e){
             Log.d("Ex",e.getMessage());
@@ -195,7 +195,9 @@ public class MainActivity extends AppCompatActivity {
         return "";
     }
     public Cursor findTicket(String id){
-        return tickets.getById(id);
+        Cursor t= tickets.getById(id);
+        t.moveToFirst();
+        return t;
     }
     public void findUpdateTicket(String id){
         tickets.update(id,1);
@@ -429,26 +431,22 @@ public class MainActivity extends AppCompatActivity {
     public void EmptyDB(View view){
         tickets.clearDatabase();
     }
-    public class AeSimpleSHA1 {
-        private String convertToHex(byte[] data) {
-            StringBuilder buf = new StringBuilder();
-            for (byte b : data) {
-                int halfbyte = (b >>> 4) & 0x0F;
-                int two_halfs = 0;
-                do {
-                    buf.append((0 <= halfbyte) && (halfbyte <= 9) ? (char) ('0' + halfbyte) : (char) ('a' + (halfbyte - 10)));
-                    halfbyte = b & 0x0F;
-                } while (two_halfs++ < 1);
-            }
-            return buf.toString();
-        }
 
-        public  String SHA1(String text) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-            MessageDigest md = MessageDigest.getInstance("SHA-1");
-            byte[] textBytes = text.getBytes("iso-8859-1");
-            md.update(textBytes, 0, textBytes.length);
-            byte[] sha1hash = md.digest();
-            return convertToHex(sha1hash);
+    public static String sha256(String base) {
+        try{
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(base.getBytes("UTF-8"));
+            StringBuffer hexString = new StringBuffer();
+
+            for (int i = 0; i < hash.length; i++) {
+                String hex = Integer.toHexString(0xff & hash[i]);
+                if(hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+
+            return hexString.toString();
+        } catch(Exception ex){
+            throw new RuntimeException(ex);
         }
     }
 }

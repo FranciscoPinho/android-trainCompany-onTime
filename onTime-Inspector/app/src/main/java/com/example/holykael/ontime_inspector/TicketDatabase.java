@@ -57,8 +57,8 @@ public class TicketDatabase extends SQLiteOpenHelper {
                 .rawQuery("SELECT _id,uuid,trainDesignation,validation,origin,destination,departureTime,arrivalTime,price FROM tickets ORDER BY trainDesignation",
                         null));
     }
-    public Cursor getById(String id) {
-        String[] args={id};
+    public Cursor getById(String uuid) {
+        String[] args={uuid};
         return(getReadableDatabase()
                 .rawQuery("SELECT _id,uuid,trainDesignation,validation,origin,destination,departureTime,arrivalTime,price FROM tickets WHERE uuid=?",
                         args));
