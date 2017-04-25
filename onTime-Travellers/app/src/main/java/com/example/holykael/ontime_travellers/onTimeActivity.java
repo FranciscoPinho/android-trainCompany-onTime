@@ -56,6 +56,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 public class onTimeActivity extends AppCompatActivity {
 
@@ -137,8 +138,7 @@ public class onTimeActivity extends AppCompatActivity {
                         final Spinner origin = (Spinner) findViewById(R.id.originspinner);
                         final Spinner destination = (Spinner) findViewById(R.id.destspinner);
                         final Spinner trains = (Spinner) findViewById(R.id.trainspinner);
-                        origin.setSelection(0);
-                        destination.setSelection(5);
+
                         updateTrainSpinner(trains,origin.getSelectedItem().toString(),destination.getSelectedItem().toString());
                         destination.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
@@ -178,7 +178,8 @@ public class onTimeActivity extends AppCompatActivity {
                                 ImageView qrCode = (ImageView) findViewById(R.id.QRCode);
                                 Bitmap bm = BitmapFactory.decodeFile(file.toString());
                                 qrCode.setImageBitmap(bm);
-                                getTicketInfo(filename.charAt(0));
+                                StringTokenizer tk = new StringTokenizer(filename,"-");
+                                getTicketInfo(tk.nextToken());
                             }
                             public void onNothingSelected(AdapterView<?> parent) {
                             }
@@ -631,7 +632,7 @@ public class onTimeActivity extends AppCompatActivity {
     public Activity get_this(){
         return this;
     }
-    public void getTicketInfo(char beg){
+    public void getTicketInfo(String beg){
         SharedPreferences preferences = this.getSharedPreferences("Data",Context.MODE_PRIVATE);
         String ticketinfo=preferences.getString("Ticket"+beg,null);
         if(ticketinfo!=null){
