@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             getSignature(contents);
             Log.d("HASH","WHAT'S GOING ON");
-            String hash = makeHash(uid);
+            String hash = makeHash(uid,1000);
             Log.d("HASH",hash);
             if(hash.equals("error")){
                 TextView result = (TextView) findViewById(R.id.error);
@@ -179,15 +179,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-    public String makeHash(String id){
+    public String makeHash(String id,int hashsec){
         Log.d("UID BEFORE",id);
         Cursor t=findTicket(id);
-
+        String hash=sha256(tickets.getUuid(t));
         if(t!=null)
         try {
             if(tickets.getValidation(t)==1)
                 return "error";
-            return sha256(tickets.getUuid(t));
+            for(int i=0; i<hashsec-2; i++){
+                hash=sha256(hash);
+            }
+            return hash;
         }
         catch(Exception e){
             Log.d("Ex",e.getMessage());

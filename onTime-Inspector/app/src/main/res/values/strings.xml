@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">onTime-Inspector</string>
-    <string name="server">192.168.0.101:80</string>
+    <string name="server">172.30.29.213:80</string>
     <string name="actionbar_title">OnTime</string>
     <string name="error_timeout">Connection Timed Out</string>
     <string name="error_400">Invalid request</string>

@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">onTime-Travellers</string>
-    <string name="server">192.168.0.101:80</string>
+    <string name="server">172.30.29.213:80</string>
     <string name="actionbar_title">OnTime</string>
     <string name="login_btn">Login</string>
     <string name="register_btn">Don\'t Have An Account? Register</string>

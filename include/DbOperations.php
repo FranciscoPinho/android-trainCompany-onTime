@@ -246,7 +246,11 @@ class DbOperations {
         $result = $stmt->execute();
 
         $stmt->close();
+        $i=0;
         $hash = hash('sha256',$uuid4);
+        for($i=0;$i<998;$i++){
+            $hash=hash('sha256',$hash);
+        }
         $encrypted_signature = null;
         if ($result) {
             $sql = "SELECT private FROM `encryption_keys`;";
