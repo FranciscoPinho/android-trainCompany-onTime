@@ -1,5 +1,5 @@
 # android-trainCompany-onTime
-A collection of android applications to mimick ticket purchase/validation. This project was developed completely on my own as a university assignment-
+A collection of android applications to mimic ticket purchase/validation. This project was developed completely on my own as a university assignment-
 
 
 ![download](https://cloud.githubusercontent.com/assets/9083330/25300786/8c6b1754-270f-11e7-96cf-94e44fa2f4d7.png)
